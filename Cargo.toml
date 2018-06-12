@@ -1,0 +1,9 @@
+[package]
+name = "server"
+version = "0.1.0"
+authors = ["equal-l2 <eng.equall2@gmail.com>"]
+
+[dependencies]
+rocket = "0.3.12"
+rocket_codegen = "0.3.12"
+rppal = "0.6.0"
