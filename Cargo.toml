@@ -7,3 +7,4 @@ authors = ["equal-l2 <eng.equall2@gmail.com>"]
 rocket = "0.3.12"
 rocket_codegen = "0.3.12"
 rppal = "0.6.0"
+lazy_static = "1.0"

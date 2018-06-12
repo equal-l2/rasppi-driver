@@ -1,56 +1,71 @@
 extern crate rppal;
+use self::rppal::gpio::{Gpio, Level, Mode};
+use std::sync::Mutex;
 
-struct Motor {
-    pin1 :u8, // IN1
-    pin2 :u8, // IN2
+lazy_static! {
+    static ref GPIO: Mutex<Gpio> = { Mutex::new(Gpio::new().unwrap()) };
 }
 
+pub struct Motor(u8, u8);
+
 impl Motor {
-    fn new(p1 :u8, p2 :u8) -> Self {
-        Gpio.set_mode(p1, Output);
-        Gpio.set_mode(p2, Output);
-        Motor{pin1 : p1, pin2 : p2}
+    pub fn new(p1: u8, p2: u8) -> Self {
+        let mut gpio = GPIO.lock().unwrap();
+        (*gpio).set_mode(p1, Mode::Output);
+        (*gpio).set_mode(p2, Mode::Output);
+        Motor(p1, p2)
     }
 
     fn forward(&self) {
-        Gpio.write(self.pin1,HIGH);
-        Gpio.write(self.pin2,LOW);
+        println!("OUT: 1 0");
+        let gpio = GPIO.lock().unwrap();
+        (*gpio).write(self.0, Level::High);
+        (*gpio).write(self.1, Level::Low);
     }
 
     fn backward(&self) {
-        Gpio.write(self.pin1,LOW);
-        Gpio.write(self.pin2,HIGH);
+        println!("OUT: 0 1");
+        let gpio = GPIO.lock().unwrap();
+        (*gpio).write(self.0, Level::Low);
+        (*gpio).write(self.1, Level::High);
     }
 
     fn stop(&self) {
-        Gpio.write(self.pin1,LOW);
-        Gpio.write(self.pin2,LOW);
+        println!("OUT: 0 0");
+        let gpio = GPIO.lock().unwrap();
+        (*gpio).write(self.0, Level::Low);
+        (*gpio).write(self.1, Level::Low);
     }
 }
 
-struct Driver {
-    Motor left,
-    Motor right,
+pub struct Driver {
+    pub left: Motor,
+    pub right: Motor,
 }
 
 impl Driver {
-    fn forward(&self) {
+    pub fn forward(&self) {
         self.left.forward();
         self.right.forward();
     }
 
-    fn backward(&self) {
+    pub fn backward(&self) {
         self.left.backward();
         self.right.backward();
     }
 
-    fn left(&self) {
+    pub fn left(&self) {
         self.left.forward();
         self.right.backward();
     }
 
-    fn right(&self) {
+    pub fn right(&self) {
         self.left.backward();
         self.right.forward();
+    }
+
+    pub fn stop(&self) {
+        self.left.stop();
+        self.right.stop();
     }
 }

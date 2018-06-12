@@ -1,21 +1,48 @@
 #![feature(plugin, decl_macro)]
 #![plugin(rocket_codegen)]
-#[macro_use] extern crate rocket;
+extern crate rocket;
+#[macro_use]
+extern crate lazy_static;
 mod driver;
-static driver :Driver = Driver{ left : driver::Motor::new(1,2), right : driver::Motor::new(3,4) };
+use driver::{Driver, Motor};
+
+lazy_static! {
+    static ref DRV: Driver = {
+        Driver {
+            left: Motor::new(19, 26),
+            right: Motor::new(20, 21),
+        }
+    };
+}
 
 #[get("/driver/<op>")]
-fn begin(op: String) -> Option<String> {
+fn handle_driver(op: String) -> Option<String> {
     println!("op:{}", op);
     match op.as_str() {
-        "forward" => { driver.forward(); Some("".into()) }
-        "left" => { driver.left(); Some("".into()) }
-        "right" => { driver.right(); Some("".into()) }
-        "stop" => { driver.stop(); Some("".into()) }
-        _ => None
+        "forward" => {
+            DRV.forward();
+            Some("".into())
+        }
+        "backward" => {
+            DRV.backward();
+            Some("".into())
+        }
+        "left" => {
+            DRV.left();
+            Some("".into())
+        }
+        "right" => {
+            DRV.right();
+            Some("".into())
+        }
+        "stop" => {
+            DRV.stop();
+            Some("".into())
+        }
+        _ => None,
     }
 }
 
 fn main() {
-    rocket::ignite().mount("/", routes![web::begin]).launch();
+    rocket::ignite().mount("/", routes![handle_driver]).launch();
 }
