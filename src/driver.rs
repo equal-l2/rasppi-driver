@@ -1,7 +1,11 @@
+#[cfg(feature = "gpio")]
 extern crate rppal;
+#[cfg(feature = "gpio")]
 use self::rppal::gpio::{Gpio, Level, Mode};
+#[cfg(feature = "gpio")]
 use std::sync::Mutex;
 
+#[cfg(feature = "gpio")]
 lazy_static! {
     static ref GPIO: Mutex<Gpio> = { Mutex::new(Gpio::new().unwrap()) };
 }
@@ -10,31 +14,44 @@ pub struct Motor(u8, u8);
 
 impl Motor {
     pub fn new(p1: u8, p2: u8) -> Self {
-        let mut gpio = GPIO.lock().unwrap();
-        (*gpio).set_mode(p1, Mode::Output);
-        (*gpio).set_mode(p2, Mode::Output);
+        #[cfg(feature = "gpio")]
+        {
+            let mut gpio = GPIO.lock().unwrap();
+            (*gpio).set_mode(p1, Mode::Output);
+            (*gpio).set_mode(p2, Mode::Output);
+        }
+        println!("GPIO init: {} {}", p1, p2);
         Motor(p1, p2)
     }
 
     fn forward(&self) {
-        println!("OUT: 1 0");
-        let gpio = GPIO.lock().unwrap();
-        (*gpio).write(self.0, Level::High);
-        (*gpio).write(self.1, Level::Low);
+        #[cfg(feature = "gpio")]
+        {
+            let gpio = GPIO.lock().unwrap();
+            (*gpio).write(self.0, Level::High);
+            (*gpio).write(self.1, Level::Low);
+        }
+        println!("GPIO {} {} : 1 0", self.0, self.1);
     }
 
     fn backward(&self) {
-        println!("OUT: 0 1");
-        let gpio = GPIO.lock().unwrap();
-        (*gpio).write(self.0, Level::Low);
-        (*gpio).write(self.1, Level::High);
+        #[cfg(feature = "gpio")]
+        {
+            let gpio = GPIO.lock().unwrap();
+            (*gpio).write(self.0, Level::Low);
+            (*gpio).write(self.1, Level::High);
+        }
+        println!("GPIO {} {} : 0 1", self.0, self.1);
     }
 
     fn stop(&self) {
-        println!("OUT: 0 0");
-        let gpio = GPIO.lock().unwrap();
-        (*gpio).write(self.0, Level::Low);
-        (*gpio).write(self.1, Level::Low);
+        #[cfg(feature = "gpio")]
+        {
+            let gpio = GPIO.lock().unwrap();
+            (*gpio).write(self.0, Level::Low);
+            (*gpio).write(self.1, Level::Low);
+        }
+        println!("GPIO {} {} : 0 0", self.0, self.1);
     }
 }
 

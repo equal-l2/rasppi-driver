@@ -1,13 +1,19 @@
 [package]
+authors = ["equal-l2 <eng.equall2@gmail.com>"]
 name = "server"
 version = "0.1.0"
-authors = ["equal-l2 <eng.equall2@gmail.com>"]
-
 [dependencies]
+lazy_static = "1.0"
 rocket = "0.3.12"
 rocket_codegen = "0.3.12"
-rppal = "0.6.0"
-lazy_static = "1.0"
 serde = "1.0.66"
 serde_derive = "1.0.66"
 toml = "0.4.6"
+
+[dependencies.rppal]
+optional = true
+version = "0.6.0"
+
+[features]
+default = ["gpio"]
+gpio = ["rppal"]
