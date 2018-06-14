@@ -7,16 +7,18 @@ extern crate lazy_static;
 #[macro_use]
 extern crate serde_derive;
 
-mod driver;
 mod config;
-use driver::{Driver, Motor};
+mod driver;
 use config::Config;
+use driver::{Driver, Motor};
 use std::io::Read;
 
 lazy_static! {
     static ref DRV: Driver = {
         let mut input = String::new();
-        std::fs::File::open("GPIO.toml").and_then(|mut f| f.read_to_string(&mut input)).expect("Could not read GPIO.toml");
+        std::fs::File::open("GPIO.toml")
+            .and_then(|mut f| f.read_to_string(&mut input))
+            .expect("Could not read GPIO.toml");
         let conf: Config = toml::from_str(&input).expect("Bad structure in GPIO.toml");
         Driver {
             left: Motor::new(conf.left.pin1, conf.left.pin2),
@@ -26,28 +28,28 @@ lazy_static! {
 }
 
 #[get("/driver/<op>")]
-fn handle_driver(op: String) -> Option<String> {
+fn handle_driver(op: String) -> Option<()> {
     println!("op:{}", op);
     match op.as_str() {
         "forward" => {
             DRV.forward();
-            Some("".into())
+            Some(())
         }
         "backward" => {
             DRV.backward();
-            Some("".into())
+            Some(())
         }
         "left" => {
             DRV.left();
-            Some("".into())
+            Some(())
         }
         "right" => {
             DRV.right();
-            Some("".into())
+            Some(())
         }
         "stop" => {
             DRV.stop();
-            Some("".into())
+            Some(())
         }
         _ => None,
     }
