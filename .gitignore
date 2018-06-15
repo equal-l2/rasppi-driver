@@ -1,2 +1,5 @@
 /target
 **/*.rs.bk
+*.crt
+*.key
+*.pem
