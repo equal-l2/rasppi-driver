@@ -15,12 +15,12 @@ extern crate chan_signal;
 mod auth;
 mod config;
 mod driver;
-use self::rocket_simpleauth::userpass::UserPass;
 use self::rocket::response::Redirect;
+use self::rocket_simpleauth::userpass::UserPass;
+use chan_signal::Signal;
 use config::Config;
 use driver::{Driver, Motor};
 use std::io::Read;
-use chan_signal::Signal;
 
 lazy_static! {
     static ref DRV: Driver = {
