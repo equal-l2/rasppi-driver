@@ -15,6 +15,9 @@ use std::io::Read;
 
 lazy_static! {
     static ref DRV: Driver = {
+        #[cfg(not(feature = "gpio"))] {
+            println!("!!! WARNING : GPIO is disabled !!!");
+        }
         let mut input = String::new();
         std::fs::File::open("GPIO.toml")
             .and_then(|mut f| f.read_to_string(&mut input))
