@@ -89,7 +89,7 @@ impl Driver {
     pub fn cleanup(self) {
         #[cfg(feature = "gpio")]
         {
-            let gpio = GPIO.lock().unwrap();
+            let mut gpio = GPIO.lock().unwrap();
             (*gpio).cleanup();
         }
     }
