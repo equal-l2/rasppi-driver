@@ -11,6 +11,8 @@ rocket_codegen = "0.3.12"
 serde = "1.0.66"
 serde_derive = "1.0.66"
 toml = "0.4.6"
+chan = "0.1"
+chan-signal = "0.3"
 
 [dependencies.rppal]
 optional = true

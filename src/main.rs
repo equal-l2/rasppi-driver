@@ -8,6 +8,9 @@ extern crate toml;
 extern crate lazy_static;
 #[macro_use]
 extern crate serde_derive;
+#[macro_use]
+extern crate chan;
+extern crate chan_signal;
 
 mod auth;
 mod config;
@@ -17,6 +20,7 @@ use self::rocket::response::Redirect;
 use config::Config;
 use driver::{Driver, Motor};
 use std::io::Read;
+use chan_signal::Signal;
 
 lazy_static! {
     static ref DRV: Driver = {
@@ -69,7 +73,7 @@ fn handle_driver(_info: UserPass<String>, op: String) -> Option<()> {
     }
 }
 
-fn main() {
+fn run_server(_sdone: chan::Sender<()>) {
     rocket::ignite()
         .mount(
             "/",
@@ -84,4 +88,18 @@ fn main() {
             ],
         )
         .launch();
+}
+
+fn main() {
+    let signal = chan_signal::notify(&[Signal::INT, Signal::TERM]);
+    let (sdone, rdone) = chan::sync(0);
+
+    std::thread::spawn(move || run_server(sdone));
+
+    chan_select! {
+        signal.recv() -> _ => {
+            DRV.cleanup();
+        },
+        rdone.recv() => {}
+    }
 }
