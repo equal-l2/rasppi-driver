@@ -85,4 +85,12 @@ impl Driver {
         self.left.stop();
         self.right.stop();
     }
+
+    pub fn cleanup(self) {
+        #[cfg(feature = "gpio")]
+        {
+            let gpio = GPIO.lock().unwrap();
+            (*gpio).cleanup();
+        }
+    }
 }
