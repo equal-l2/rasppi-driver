@@ -7,9 +7,9 @@ use rocket::request::Form;
 use rocket::response::content::Html;
 use rocket::response::Redirect;
 
-pub struct ItsAuthenticator;
+pub struct SimpleAuthenticator;
 
-impl rauth::authenticator::Authenticator for ItsAuthenticator {
+impl rauth::authenticator::Authenticator for SimpleAuthenticator {
     type User = String;
 
     fn user(&self) -> String {
@@ -19,10 +19,10 @@ impl rauth::authenticator::Authenticator for ItsAuthenticator {
     fn check_credentials(username: String, passwd: String) -> Result<Self, Self> {
         if username == "its" && passwd == "ume2018" {
             println!("[*] auth succeeded");
-            Ok(ItsAuthenticator)
+            Ok(SimpleAuthenticator)
         } else {
             println!("[*] auth failed");
-            Err(ItsAuthenticator)
+            Err(SimpleAuthenticator)
         }
     }
 }
@@ -45,7 +45,7 @@ pub fn admin(info: UserPass<String>) -> Html<String> {
 #[get("/admin", rank = 2)]
 pub fn login() -> Html<&'static str> {
     Html(
-        "Authenication required to operate
+        "Authentication required to operate
     <form action=\"/admin\" method=\"POST\"> \
         <input type=\"text\" name=\"username\" /> \
         <input type=\"password\" name=\"password\" /> \
@@ -55,14 +55,14 @@ pub fn login() -> Html<&'static str> {
 }
 
 #[post("/admin", data = "<form>")]
-pub fn login_post(form: Form<LoginStatus<ItsAuthenticator>>, cookies: Cookies) -> LoginRedirect {
+pub fn login_post(form: Form<LoginStatus<SimpleAuthenticator>>, cookies: Cookies) -> LoginRedirect {
     form.into_inner().redirect("/admin", "/unauth", cookies)
 }
 
 #[get("/unauth")]
 pub fn unauth() -> Html<String> {
     // we use request guards to fall down to the login page if UserPass couldn't find a valid cookie
-    Html("Authenication failed".into())
+    Html("Authentication failed".into())
 }
 
 #[get("/logout")]
