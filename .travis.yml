@@ -1,5 +1,5 @@
 language: rust
 rust:
-  - nightly-2018-06-10
+  - nightly
 script:
 - cargo check --verbose
