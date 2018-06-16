@@ -1,3 +1,4 @@
+extern crate crypto;
 extern crate rocket_simpleauth as rauth;
 
 use self::rauth::status::{LoginRedirect, LoginStatus};
@@ -7,29 +8,51 @@ use rocket::request::Form;
 use rocket::response::content::Html;
 use rocket::response::Redirect;
 
-pub struct SimpleAuthenticator;
+//const ITERATION_COUNT: u32 = 10000;
+const BP_USERNAME: &'static str =
+    "$rpbkdf2$0$AAAnEA==$pdt8xlHGxk/GJa26Bg3g1Q==$VGt+AmV7OnN/trocjyDeJLDpmxShkhDsDSIfhIrQ+ws=$";
+const BP_PASSWORD: &'static str =
+    "$rpbkdf2$0$AAAnEA==$NdQsbZR5/aRAnLYGcXamZw==$gqVtt5IhhfIAe9os3QjCRNAyB1fkyQgsKeyRb/fERu0=$";
+
+//fn hash_str(string: &str) -> Result<String, SimpleAuthenticator> {
+//    crypto::pbkdf2::pbkdf2_simple(string, ITERATION_COUNT)
+//        .or(Err(SimpleAuthenticator { username: None }))
+//}
+
+fn hash_cmp(plain: &str, hashed: &str) -> Result<bool, SimpleAuthenticator> {
+    crypto::pbkdf2::pbkdf2_check(plain, hashed).or(Err(SimpleAuthenticator { username: None }))
+}
+
+pub struct SimpleAuthenticator {
+    username: Option<String>,
+}
 
 impl rauth::authenticator::Authenticator for SimpleAuthenticator {
     type User = String;
 
     fn user(&self) -> String {
-        "its".to_string()
+        self.username
+            .as_ref()
+            .map(|s| &**s)
+            .unwrap_or("unknown")
+            .into()
     }
 
-    fn check_credentials(username: String, passwd: String) -> Result<Self, Self> {
-        if username == "its" && passwd == "ume2018" {
+    fn check_credentials(username: String, password: String) -> Result<Self, Self> {
+        if hash_cmp(&username, BP_USERNAME)? && hash_cmp(&password, BP_PASSWORD)? {
             println!("[*] auth succeeded");
-            Ok(SimpleAuthenticator)
+            Ok(SimpleAuthenticator {
+                username: Some(username),
+            })
         } else {
             println!("[*] auth failed");
-            Err(SimpleAuthenticator)
+            Err(SimpleAuthenticator { username: None })
         }
     }
 }
 
 #[get("/admin")]
 pub fn admin(info: UserPass<String>) -> Html<String> {
-    // we use request guards to fall down to the login page if UserPass couldn't find a valid cookie
     Html(format!(
         "Authentication succeeded: user logged in: {}<br>\
 <a href=\"/driver/forward\" >Forward</a>
@@ -61,8 +84,11 @@ pub fn login_post(form: Form<LoginStatus<SimpleAuthenticator>>, cookies: Cookies
 
 #[get("/unauth")]
 pub fn unauth() -> Html<String> {
-    // we use request guards to fall down to the login page if UserPass couldn't find a valid cookie
-    Html("Authentication failed".into())
+    Html(
+        "Authentication failed<br> \
+         <a href=\"/admin\" >Login</a>"
+            .into(),
+    )
 }
 
 #[get("/logout")]
