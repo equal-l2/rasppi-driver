@@ -1,3 +1,4 @@
+use std::{thread, time};
 #[cfg(feature = "gpio")]
 extern crate rppal;
 #[cfg(feature = "gpio")]
@@ -25,6 +26,8 @@ impl Motor {
     }
 
     fn forward(&self) {
+	self.stop();
+	thread::sleep(time::Duration::from_millis(1));
         #[cfg(feature = "gpio")]
         {
             let gpio = GPIO.lock().unwrap();
@@ -35,6 +38,8 @@ impl Motor {
     }
 
     fn backward(&self) {
+	self.stop();
+	thread::sleep(time::Duration::from_millis(1));
         #[cfg(feature = "gpio")]
         {
             let gpio = GPIO.lock().unwrap();
@@ -92,5 +97,6 @@ impl Driver {
             let mut gpio = GPIO.lock().unwrap();
             (*gpio).cleanup();
         }
+	println!("GPIO Clean Up");
     }
 }
