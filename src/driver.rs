@@ -1,4 +1,5 @@
-use std::{thread, time};
+use std::thread;
+use std::time::{self, Duration};
 #[cfg(feature = "gpio")]
 extern crate rppal;
 #[cfg(feature = "gpio")]
@@ -10,6 +11,8 @@ use std::sync::Mutex;
 lazy_static! {
     static ref GPIO: Mutex<Gpio> = { Mutex::new(Gpio::new().unwrap()) };
 }
+
+const WAIT: Duration = time::Duration::from_micros(100);
 
 pub struct Motor(u8, u8);
 
@@ -26,8 +29,8 @@ impl Motor {
     }
 
     fn forward(&self) {
-	self.stop();
-	thread::sleep(time::Duration::from_millis(1));
+        self.stop();
+        thread::sleep(WAIT);
         #[cfg(feature = "gpio")]
         {
             let gpio = GPIO.lock().unwrap();
@@ -38,8 +41,8 @@ impl Motor {
     }
 
     fn backward(&self) {
-	self.stop();
-	thread::sleep(time::Duration::from_millis(1));
+        self.stop();
+        thread::sleep(WAIT);
         #[cfg(feature = "gpio")]
         {
             let gpio = GPIO.lock().unwrap();
@@ -97,6 +100,6 @@ impl Driver {
             let mut gpio = GPIO.lock().unwrap();
             (*gpio).cleanup();
         }
-	println!("GPIO Clean Up");
+        println!("GPIO Clean Up");
     }
 }
