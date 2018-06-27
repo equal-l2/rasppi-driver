@@ -15,6 +15,11 @@ chan = "0.1"
 chan-signal = "0.3"
 rust-crypto = "0.2.36"
 
+[dependencies.rocket_contrib]
+version = "0.3.14"
+default-features = false
+features = ["tera_templates"]
+
 [dependencies.rppal]
 optional = true
 version = "0.7.0"
