@@ -17,7 +17,7 @@ rust-crypto = "0.2.36"
 
 [dependencies.rppal]
 optional = true
-version = "0.6.0"
+version = "0.7.0"
 
 [features]
 default = ["gpio"]
