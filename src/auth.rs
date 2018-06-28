@@ -5,8 +5,10 @@ use self::rauth::status::{LoginRedirect, LoginStatus};
 use self::rauth::userpass::UserPass;
 use rocket::http::Cookies;
 use rocket::request::Form;
-use rocket::response::content::Html;
+use rocket::response::NamedFile;
 use rocket::response::Redirect;
+use rocket_contrib::Template;
+use std::io;
 
 //const ITERATION_COUNT: u32 = 10000;
 const BP_USERNAME: &'static str =
@@ -52,29 +54,19 @@ impl rauth::authenticator::Authenticator for SimpleAuthenticator {
 }
 
 #[get("/admin")]
-pub fn admin(info: UserPass<String>) -> Html<String> {
-    Html(format!(
-        "Authentication succeeded: user logged in: {}<br>\
-<a href=\"/driver/forward\" >Forward</a>
-<a href=\"/driver/backward\" >Backward</a>
-<a href=\"/driver/left\" >Left</a>
-<a href=\"/driver/right\" >Right</a>
-<a href=\"/driver/stop\" >Stop</a>
-<a href=\"/logout\" >Logout</a>",
-        info.user
-    ))
+pub fn admin(info: UserPass<String>) -> Template {
+    #[derive(Serialize)]
+    struct Context<'a> {
+        user: &'a String,
+    }
+
+    let c = Context { user: &info.user };
+    Template::render("control", c)
 }
 
 #[get("/admin", rank = 2)]
-pub fn login() -> Html<&'static str> {
-    Html(
-        "Authentication required to operate
-    <form action=\"/admin\" method=\"POST\"> \
-        <input type=\"text\" name=\"username\" /> \
-        <input type=\"password\" name=\"password\" /> \
-        <input type=\"submit\" value=\"Login\" /> \
-    </form>",
-    )
+pub fn login() -> io::Result<NamedFile> {
+    NamedFile::open("pages/login.html")
 }
 
 #[post("/admin", data = "<form>")]
@@ -83,12 +75,8 @@ pub fn login_post(form: Form<LoginStatus<SimpleAuthenticator>>, cookies: Cookies
 }
 
 #[get("/unauth")]
-pub fn unauth() -> Html<String> {
-    Html(
-        "Authentication failed<br> \
-         <a href=\"/admin\" >Login</a>"
-            .into(),
-    )
+pub fn unauth() -> io::Result<NamedFile> {
+    NamedFile::open("pages/unauth.html")
 }
 
 #[get("/logout")]

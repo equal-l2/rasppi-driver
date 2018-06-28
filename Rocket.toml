@@ -1,6 +1,9 @@
 [development]
 address = "0.0.0.0"
 
+[global]
+template_dir = "pages/"
+
 [global.tls]
 certs = "rocketcert.crt"
 key = "rocketpri.key"

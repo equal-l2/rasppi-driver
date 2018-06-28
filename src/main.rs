@@ -11,6 +11,7 @@ extern crate serde_derive;
 #[macro_use]
 extern crate chan;
 extern crate chan_signal;
+extern crate rocket_contrib;
 
 mod auth;
 mod config;
@@ -20,6 +21,7 @@ use self::rocket_simpleauth::userpass::UserPass;
 use chan_signal::Signal;
 use config::Config;
 use driver::{Driver, Motor};
+use rocket_contrib::Template;
 use std::io::Read;
 
 lazy_static! {
@@ -87,6 +89,7 @@ fn run_server(_sdone: chan::Sender<()>) {
                 handle_driver
             ],
         )
+        .attach(Template::fairing())
         .launch();
 }
 
