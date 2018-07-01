@@ -21,8 +21,10 @@ use self::rocket_simpleauth::userpass::UserPass;
 use chan_signal::Signal;
 use config::Config;
 use driver::{Driver, Motor};
+use rocket::response::NamedFile;
 use rocket_contrib::Template;
 use std::io::Read;
+use std::path::{Path, PathBuf};
 
 lazy_static! {
     static ref DRV: Driver = {
@@ -45,6 +47,11 @@ lazy_static! {
 #[get("/")]
 fn handle_root() -> Redirect {
     Redirect::to("/admin")
+}
+
+#[get("/assets/<file..>")]
+fn handle_assets(file: PathBuf) -> Option<NamedFile> {
+    NamedFile::open(Path::new("pages/assets/").join(file)).ok()
 }
 
 #[get("/driver/<op>")]
@@ -86,7 +93,8 @@ fn run_server(_sdone: chan::Sender<()>) {
                 auth::logout,
                 auth::unauth,
                 handle_root,
-                handle_driver
+                handle_driver,
+                handle_assets
             ],
         )
         .attach(Template::fairing())

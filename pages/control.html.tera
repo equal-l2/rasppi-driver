@@ -2,14 +2,16 @@
 <html>
 <head>
   <title>Control</title>
+  <script src="/assets/control.js"></script>
 </head>
 <body>
   Authentication succeeded: user logged in: {{ user }}<br>
-<a href="/driver/forward">Forward</a>
-<a href="/driver/backward">Backward</a>
-<a href="/driver/left">Left</a>
-<a href="/driver/right">Right</a>
-<a href="/driver/stop">Stop</a>
+  Current status : <span style="font-weight:bold" id="status">Stop</span><br>
+<a href="javascript:void(0)" id="forward">Forward</a>
+<a href="javascript:void(0)" id="backward">Backward</a>
+<a href="javascript:void(0)" id="left">Left</a>
+<a href="javascript:void(0)" id="right">Right</a>
+<a href="javascript:void(0)" id="stop">Stop</a>
 <a href="/logout">Logout</a>
 </body>
 </html>
