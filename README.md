@@ -4,6 +4,13 @@
 
 Motor controller via web interface.
 
+## Prerequisites
+- Rust nightly toolchain
+
 ## Config
 Set pin numbers by GPIO.toml.
 Run with `cargo run`.
+
+## TODO
+- Fancier web interface
+- Video streaming from RPi camera
