@@ -5,24 +5,24 @@ version = "0.1.0"
 
 [dependencies]
 lazy_static = "1.0"
-rocket = { version = "0.3.12", features = ["tls"] }
-rocket-simpleauth = "0.4"
-rocket_codegen = "0.3.12"
-serde = "1.0.66"
-serde_derive = "1.0.66"
+rocket = { version = "0.3.15", features = ["tls"] }
+rocket-simpleauth = "0.4.0"
+rocket_codegen = "0.3.15"
+serde = "1.0"
+serde_derive = "1.0"
 toml = "0.4.6"
-chan = "0.1"
-chan-signal = "0.3"
+chan = "0.1.21"
+chan-signal = "0.3.1"
 rust-crypto = "0.2.36"
 
 [dependencies.rocket_contrib]
-version = "0.3.14"
+version = "0.3.15"
 default-features = false
 features = ["tera_templates"]
 
 [dependencies.rppal]
 optional = true
-version = "0.7.0"
+version = "0.7.1"
 
 [features]
 default = ["gpio"]
