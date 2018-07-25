@@ -1,11 +1,12 @@
 // send a request for operation
 function req(op) {
-  fetch(`/driver/${op}`)
-    .then((resp) => {
+  fetch(`/driver/${op}`, {
+    method: "GET",
+    cache: "no-store",
+    credentials: "same-origin",
+  }).then((resp) => {
       if(resp.ok) { // if the request is successful
         console.log(`SUCCESS: ${op}`);
-        let spanStatus = document.getElementById("status");
-        spanStatus.innerHTML = op[0].toUpperCase() + op.slice(1);
       } else {
         throw new Error(`${resp.status} ${resp.statusText}`);
       }
