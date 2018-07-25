@@ -8,9 +8,17 @@ Motor controller via web interface.
 - Rust nightly toolchain
 
 ## Config
-Set pin numbers by GPIO.toml.
+Set pin numbers by GPIO.toml.  
 Run with `cargo run`.
 
-## TODO
-- Fancier web interface
-- Video streaming from RPi camera
+## TLS Keys
+This software requires TLS keys to run.  
+For testing purpose, you can generate keys with OpenSSL by:
+```
+openssl req -new -newkey rsa:2048 -x509 -sha256 -days 365 -nodes -out rocketcert.crt -keyout rocketpri.key
+```
+
+## Javascript dependency
+We use [JQuery](https://github.com/jquery/jquery) and [turnBox.js](https://github.com/nohtcoltd/turnbox_js).  
+We use them as merged and minified form `bundle.js`, which is made with uglify.js.  
+Though you don't need to make it by yourself as we vendor it, but you can make it via `make-bundle-js.sh` if you need.  
