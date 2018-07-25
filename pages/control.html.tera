@@ -77,7 +77,8 @@
     var r = document.getElementById("r");
     var l = document.getElementById("l");
     var d = document.getElementById("d");
-    function downUp(e) {//upButton keydown 
+    function downUp(e) {//upButton keydown
+      e.preventDefault();
       $(this).turnBoxAnimate({
         face: 2,
         animation: true
@@ -85,6 +86,7 @@
       req("forward");
     }
     function upUp(e) {//upButton keyup
+      e.preventDefault();
       $(this).turnBoxAnimate({
         face: 1,
         animation: true
@@ -92,6 +94,7 @@
       req("stop");
     }
     function downRight(e) {//rightButton keydown
+      e.preventDefault();
       $(this).turnBoxAnimate({
         face: 2,
         animation: true
@@ -99,6 +102,7 @@
       req("right");
     }
     function upRight(e) {//rightButton keyup
+      e.preventDefault();
       $(this).turnBoxAnimate({
         face: 1,
         animation: true
@@ -106,6 +110,7 @@
       req("stop");
     }
     function downLeft(e) {//leftButton keydown
+      e.preventDefault();
       $(this).turnBoxAnimate({
         face: 2,
         animation: true
@@ -113,6 +118,7 @@
       req("left");
     }
     function upLeft(e) {//leftButton keyup
+      e.preventDefault();
       $(this).turnBoxAnimate({
         face: 1,
         animation: true
@@ -120,6 +126,7 @@
       req("stop");
     }
     function downDown(e) {//downButton keydown
+      e.preventDefault();
       $(this).turnBoxAnimate({
         face: 2,
         animation: true
@@ -127,6 +134,7 @@
       req("backward");
     }
     function upDown(e) {//upButton keyup
+      e.preventDefault();
       $(this).turnBoxAnimate({
         face: 1,
         animation: true
@@ -136,18 +144,26 @@
     if (u.addEventListener) {
       u.addEventListener("mousedown", downUp);
       u.addEventListener("mouseup", upUp);
+      u.addEventListener("touchstart", downUp);
+      u.addEventListener("touchend", upUp);
     }
     if (r.addEventListener) {
       r.addEventListener("mousedown", downRight);
       r.addEventListener("mouseup", upRight);
+      r.addEventListener("touchstart", downRight);
+      r.addEventListener("touchend", upRight);
     }
     if (l.addEventListener) {
       l.addEventListener("mousedown", downLeft);
       l.addEventListener("mouseup", upLeft);
+      l.addEventListener("touchstart", downLeft);
+      l.addEventListener("touchend", upLeft);
     }
     if (d.addEventListener) {
       d.addEventListener("mousedown", downDown);
       d.addEventListener("mouseup", upDown);
+      d.addEventListener("touchstart", downDown);
+      d.addEventListener("touchend", upDown);
     }
   </script>
 </body>
