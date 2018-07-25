@@ -1,17 +1,155 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="ja">
+
 <head>
-  <title>Control</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="assets/design.css">
   <script src="/assets/control.js"></script>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" /></script>
+  <script type="text/javascript" src="assets/turnBox.js"></script>
+  <title>BlueBerryPi</title>
 </head>
+
 <body>
-  Authentication succeeded: user logged in: {{ user }}<br>
-  Current status : <span style="font-weight:bold" id="status">Stop</span><br>
-<a href="javascript:void(0)" id="forward">Forward</a>
-<a href="javascript:void(0)" id="backward">Backward</a>
-<a href="javascript:void(0)" id="left">Left</a>
-<a href="javascript:void(0)" id="right">Right</a>
-<a href="javascript:void(0)" id="stop">Stop</a>
-<a href="/logout">Logout</a>
+  <header>
+    <h1>
+      ブルーベリーパイ
+      <!-- Authentication succeeded: user logged in: {{ user }} -->
+    </h1>
+  </header>
+  <div id="camera">
+    dummy
+  </div>
+  <div id="container">
+    <div class="up" id="u">
+      <div id="up-front">
+        <p class="turnBoxButton turnBoxButtonEventMouseup">Forward</p>
+      </div>
+      <div>
+        <p class="turnBoxButton">Pressed</p>
+      </div>
+    </div>
+    <div class="left" id="l">
+      <div id="left-front">
+        <p class="turnBoxButton">Left</p>
+      </div>
+      <div>
+        <p class="turnBoxButton">Pressed</p>
+      </div>
+    </div>
+    <div class="right" id="r">
+      <div id="right-front">
+        <p class="turnBoxButton">Right</p>
+      </div>
+      <div>
+        <p class="turnBoxButton">Pressed</p>
+      </div>
+    </div>
+    <div class="down" id="d">
+      <div id="down-front">
+        <p class="turnBoxButton">Back</p>
+      </div>
+      <div>
+        <p class="turnBoxButton">Pressed</p>
+      </div>
+    </div>
+  </div>
+  <script>
+    $(".up").turnBox({
+      duration: 50,
+      perspective:400,
+      direction:"negative"
+    });
+    $(".left").turnBox({
+      duration: 50,
+      axis:"Y",
+    });
+    $(".right").turnBox({
+      duration: 50,
+      axis:"Y",
+      direction:"negative"
+    });
+    $(".down").turnBox({
+      duration: 50,
+      direction:"positive"
+    });
+    var u = document.getElementById("u");
+    var r = document.getElementById("r");
+    var l = document.getElementById("l");
+    var d = document.getElementById("d");
+    function downUp(e) {//upButton keydown 
+      $(this).turnBoxAnimate({
+        face: 2,
+        animation: true
+      });
+      req("forward");
+    }
+    function upUp(e) {//upButton keyup
+      $(this).turnBoxAnimate({
+        face: 1,
+        animation: true
+      });
+      req("stop");
+    }
+    function downRight(e) {//rightButton keydown
+      $(this).turnBoxAnimate({
+        face: 2,
+        animation: true
+      });
+      req("right");
+    }
+    function upRight(e) {//rightButton keyup
+      $(this).turnBoxAnimate({
+        face: 1,
+        animation: true
+      });
+      req("stop");
+    }
+    function downLeft(e) {//leftButton keydown
+      $(this).turnBoxAnimate({
+        face: 2,
+        animation: true
+      });
+      req("left");
+    }
+    function upLeft(e) {//leftButton keyup
+      $(this).turnBoxAnimate({
+        face: 1,
+        animation: true
+      });
+      req("stop");
+    }
+    function downDown(e) {//downButton keydown
+      $(this).turnBoxAnimate({
+        face: 2,
+        animation: true
+      });
+      req("backward");
+    }
+    function upDown(e) {//upButton keyup
+      $(this).turnBoxAnimate({
+        face: 1,
+        animation: true
+      });
+      req("stop");
+    }
+    if (u.addEventListener) {
+      u.addEventListener("mousedown", downUp);
+      u.addEventListener("mouseup", upUp);
+    }
+    if (r.addEventListener) {
+      r.addEventListener("mousedown", downRight);
+      r.addEventListener("mouseup", upRight);
+    }
+    if (l.addEventListener) {
+      l.addEventListener("mousedown", downLeft);
+      l.addEventListener("mouseup", upLeft);
+    }
+    if (d.addEventListener) {
+      d.addEventListener("mousedown", downDown);
+      d.addEventListener("mouseup", upDown);
+    }
+  </script>
 </body>
+
 </html>

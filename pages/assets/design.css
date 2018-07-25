@@ -1,0 +1,69 @@
+html,body{
+    height:100%;
+    width:auto;
+    margin:0;
+}
+body{
+    background: linear-gradient(#808080,black);
+    background-size: auto;
+}
+h1{
+    color: white;/*文字色*/
+    padding: 0.5em 0;/*上下の余白*/
+    border-top: solid 3px #6c9bd2;/*上線*/
+    border-bottom: solid 3px #6c9bd2;/*下線*/
+    height:10%;
+    margin:2% auto;
+    font-size:1em;
+}
+h2{
+    height:5%;
+    margin:0 auto;
+    font-size:2em;
+}
+bContenner.u{
+    left:50%;
+}
+.turnBoxButton {
+    line-height: 2.5;
+    display: block;
+    text-align: center;
+}
+
+.turnBoxFaceNum1 {
+    background: silver;
+}
+
+.turnBoxFaceNum2 {
+    background: gray;
+}
+div#container{
+    margin-left:2%;
+    margin-right:2%;
+    height:40%;
+}
+div#camera{
+    background:white;
+    height:40%;
+    width:auto;
+    margin:2% auto;
+}
+div#u{
+    margin:0% auto;
+    width:30%;
+}
+div#r{
+    margin:0% auto;
+    float: right;
+    width:30%;
+}
+div#l{
+    margin:0% auto;
+    float: left;
+    width:30%;
+}
+div#d{
+    margin:0% auto;
+    width:30%;
+    clear:both;
+}
