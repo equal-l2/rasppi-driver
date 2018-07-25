@@ -559,7 +559,7 @@
     var link_dist = options.dist;
 
     if(link_events == undefined) {
-      //var link_events = "click";
+      var link_events = "click";
     }
     if(link_dist == undefined) {
       var link_dist = "next";
@@ -686,7 +686,7 @@
     {
       var button = $(this);
       var button_events = [
-        "",
+        "click",
         "mouseover",
         "mouseup",
         "mousedown",
@@ -709,8 +709,7 @@
             } 
           });
         } else {
-          button_event = button_event + "";
-          //button_event = button_event + "click";
+          button_event = button_event + "click";
         }
       } else {
         button_event = link.events;

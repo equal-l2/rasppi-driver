@@ -1,14 +1,36 @@
 <!doctype html>
 <html>
-  <head>
-    <title>Authentication</title>
-  </head>
-  <body>
-    Authentication required to operate
+
+<head>
+  <title>Authentication</title>
+  <link rel="stylesheet" type="text/css" href="assets/login_style.css" media="all" />
+</head>
+
+<body>
+  <!--
+        Authentication required to operate
+        <form action="/admin" method="POST">
+          <input type="text" name="username" />
+          <input type="password" name="password" />
+          <input type="submit" value="Login" />
+        </form>
+        -->
+  <div id="form">
+    <p class="form-title">Login</p>
     <form action="/admin" method="POST">
-      <input type="text" name="username" />
-      <input type="password" name="password" />
-      <input type="submit" value="Login" />
+      <p>name</p>
+      <p class="mail">
+        <input type="text" name="username" />
+      </p>
+      <p>Password</p>
+      <p class="pass">
+        <input type="password" name="password" />
+      </p>
+      <p class="submit">
+        <input type="submit" value="Login" />
+      </p>
     </form>
-  </body>
+  </div>
+</body>
+
 </html>
