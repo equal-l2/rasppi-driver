@@ -20,15 +20,15 @@
     dummy
   </div>
   <div id="container">
-    <div class="up" id="u">
+    <div id="up">
       <div id="up-front">
-        <p class="turnBoxButton turnBoxButtonEventMouseup">Forward</p>
+        <p class="turnBoxButton">Forward</p>
       </div>
       <div>
         <p class="turnBoxButton">Pressed</p>
       </div>
     </div>
-    <div class="left" id="l">
+    <div id="left">
       <div id="left-front">
         <p class="turnBoxButton">Left</p>
       </div>
@@ -36,7 +36,7 @@
         <p class="turnBoxButton">Pressed</p>
       </div>
     </div>
-    <div class="right" id="r">
+    <div id="right">
       <div id="right-front">
         <p class="turnBoxButton">Right</p>
       </div>
@@ -44,7 +44,7 @@
         <p class="turnBoxButton">Pressed</p>
       </div>
     </div>
-    <div class="down" id="d">
+    <div id="down">
       <div id="down-front">
         <p class="turnBoxButton">Back</p>
       </div>
@@ -54,28 +54,28 @@
     </div>
   </div>
   <script>
-    $(".up").turnBox({
+    $("#up").turnBox({
       duration: 50,
       perspective:400,
       direction:"negative"
     });
-    $(".left").turnBox({
+    $("#left").turnBox({
       duration: 50,
       axis:"Y",
     });
-    $(".right").turnBox({
+    $("#right").turnBox({
       duration: 50,
       axis:"Y",
       direction:"negative"
     });
-    $(".down").turnBox({
+    $("#down").turnBox({
       duration: 50,
       direction:"positive"
     });
-    var u = document.getElementById("u");
-    var r = document.getElementById("r");
-    var l = document.getElementById("l");
-    var d = document.getElementById("d");
+    var u = document.getElementById("up");
+    var r = document.getElementById("right");
+    var l = document.getElementById("left");
+    var d = document.getElementById("down");
     function downUp(e) {//upButton keydown
       e.preventDefault();
       $(this).turnBoxAnimate({

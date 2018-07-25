@@ -16,14 +16,6 @@ h1{
     margin:2% auto;
     font-size:1em;
 }
-h2{
-    height:5%;
-    margin:0 auto;
-    font-size:2em;
-}
-bContenner.u{
-    left:50%;
-}
 .turnBoxButton {
     line-height: 2.5;
     display: block;
@@ -48,21 +40,21 @@ div#camera{
     width:auto;
     margin:2% auto;
 }
-div#u{
+div#up{
     margin:0% auto;
     width:30%;
 }
-div#r{
+div#right{
     margin:0% auto;
     float: right;
     width:30%;
 }
-div#l{
+div#left{
     margin:0% auto;
     float: left;
     width:30%;
 }
-div#d{
+div#down{
     margin:0% auto;
     width:30%;
     clear:both;
