@@ -15,18 +15,3 @@ function req(op) {
       console.log(`ERROR: ${err.message}`);
     });
 }
-
-function setOpListener(op) {
-  document.getElementById(op).addEventListener(
-    "click",
-    () => { req(op); }
-  );
-}
-
-window.addEventListener("load", () => {
-  setOpListener("forward");
-  setOpListener("backward");
-  setOpListener("left");
-  setOpListener("right");
-  setOpListener("stop");
-});
