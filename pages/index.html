@@ -75,52 +75,69 @@
     var r = document.getElementById("r");
     var l = document.getElementById("l");
     var d = document.getElementById("d");
-    function down(e) {
+    function downUp(e) {//upButton keydown 
       $(this).turnBoxAnimate({
         face: 2,
         animation: true
       });
     }
-    function up(e) {
+    function upUp(e) {//upButton keyup
       $(this).turnBoxAnimate({
         face: 1,
         animation: true
       });
     }
-    function keyup() {
-      $(".up").turnBoxAnimate({
+    function downRight(e) {//rightButton keydown
+      $(this).turnBoxAnimate({
+        face: 2,
+        animation: true
+      });
+    }
+    function upRight(e) {//rightButton keyup
+      $(this).turnBoxAnimate({
         face: 1,
         animation: true
       });
-      $(".right").turnBoxAnimate({
+    }
+    function downLeft(e) {//leftButton keydown
+      $(this).turnBoxAnimate({
+        face: 2,
+        animation: true
+      });
+    }
+    function upLeft(e) {//leftButton keyup
+      $(this).turnBoxAnimate({
         face: 1,
         animation: true
       });
-      $(".left").turnBoxAnimate({
+    }
+    function downDown(e) {//downButton keydown
+      $(this).turnBoxAnimate({
+        face: 2,
+        animation: true
+      });
+    }
+    function upDown(e) {//upButton keyup
+      $(this).turnBoxAnimate({
         face: 1,
         animation: true
       });
-      $(".down").turnBoxAnimate({
-        face: 1,
-        animation: true
-      });
-      //window.onmouseup = keyup;
     }
     if (u.addEventListener) {
-      u.addEventListener("mousedown", down);
-      u.addEventListener("mouseup", up);
+      u.addEventListener("mousedown", downUp);
+      u.addEventListener("mouseup", upUp);
     }
     if (r.addEventListener) {
-      r.addEventListener("mousedown", down);
-      r.addEventListener("mouseup", up);
+      r.addEventListener("mousedown", downRight);
+      r.addEventListener("mouseup", upRight);
     }
     if (l.addEventListener) {
-      l.addEventListener("mousedown", down);
-      l.addEventListener("mouseup", up);
+      l.addEventListener("mousedown", downLeft);
+      l.addEventListener("mouseup", upLeft);
     }
     if (d.addEventListener) {
-      d.addEventListener("mousedown", down);
-      d.addEventListener("mouseup", up);
+      d.addEventListener("mousedown", downDown);
+      d.addEventListener("mouseup", upDown);
     }
   </script>
 </body>
