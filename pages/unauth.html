@@ -2,9 +2,14 @@
 <html>
   <head>
     <title>Authentication failed</title>
+    <link rel="stylesheet" href="assets/login_style.css">
   </head>
   <body>
-         Authentication failed<br>
-         <a href="/admin" >Login</a>
+  <div id="form">
+    <p style="font-size:2em">Authentication failed</p>
+    <form class="submit" action="/admin" method="GET">
+      <input type="submit" value="Return">
+    </form>
+  </div>
   </body>
 </html>
