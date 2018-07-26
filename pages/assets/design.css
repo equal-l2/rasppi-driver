@@ -1,11 +1,8 @@
+@charset "utf-8";
 html,body{
     height:100%;
     width:auto;
     margin:0;
-}
-body{
-    background: linear-gradient(#808080,black);
-    background-size: auto;
 }
 h1{
     color: white;/*文字色*/
@@ -21,11 +18,16 @@ h1{
     display: block;
     text-align: center;
 }
+#music.turnBoxCurrentFace1 > .turnBoxFaceNum1 {
+    background: #f8f8ff;
+}
+#music.turnBoxCurrentFace2 > .turnBoxFaceNum2 {
+    background:#00ff7f;
+}
 
 .turnBoxFaceNum1 {
     background: silver;
 }
-
 .turnBoxFaceNum2 {
     background: gray;
 }
@@ -39,6 +41,10 @@ div#camera{
     height:40%;
     width:auto;
     margin:2% auto;
+}
+div#music{
+    margin:2% auto;
+    width:50%;
 }
 div#up{
     margin:0% auto;

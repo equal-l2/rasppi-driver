@@ -3,7 +3,8 @@
 
 <head>
   <meta charset="utf-8">
-  <link rel="stylesheet" type="text/css" href="assets/design.css">
+  <link rel="stylesheet" href="assets/design.css">
+  <link rel="stylesheet" href="assets/style-off.css" id="bodyStyle">
   <script src="/assets/control.js"></script>
   <script src="assets/bundle.js"></script>
   <title>BlueBerryPi</title>
@@ -18,6 +19,14 @@
   </header>
   <div id="camera">
     dummy
+  </div>
+  <div id="music">
+    <div id="music-front">
+      <p class="turnBoxButton">祭りモードOFF</p>
+    </div>
+    <div>
+      <p class="turnBoxButton turnBoxButtonPrev">祭りモードON</p>
+    </div>
   </div>
   <div id="container">
     <div id="up">
@@ -54,6 +63,7 @@
     </div>
   </div>
   <script>
+    var musicToggle = 0;
     var forward_audio = new Audio("assets/oisho.mp3");
     forward_audio.loop = true;
     //var right_audio = new Audio("assets/.mp3");
@@ -80,6 +90,20 @@
       duration: 50,
       direction: "positive"
     });
+    $("#music").turnBox({
+      duration: 50
+    });
+    $("#music").on("click", function () {
+      if (musicToggle == 1) {
+        musicToggle = 0;
+        //alert("祭りは終わりだ......");
+        document.getElementById('bodyStyle').href = "assets/style-off.css";
+      } else {
+        musicToggle = 1;
+        //alert("浜松祭りだ!!");
+        document.getElementById('bodyStyle').href = "assets/style-on.css";
+      }
+    });
     var u = document.getElementById("up");
     var r = document.getElementById("right");
     var l = document.getElementById("left");
@@ -90,7 +114,9 @@
         face: 2,
         animation: true
       });
-      forward_audio.play();
+      if (musicToggle == 1) {
+        forward_audio.play();
+      }
       req("forward");
     }
     function upUp(e) {//upButton keyup
@@ -100,7 +126,7 @@
         animation: true
       });
       forward_audio.pause();
-      forward_audio.currentTime=0;
+      forward_audio.currentTime = 0;
       req("stop");
     }
     function downRight(e) {//rightButton keydown
@@ -109,7 +135,9 @@
         face: 2,
         animation: true
       });
-      //right_audio.play();
+      if (musicToggle == 1) {
+        //right_audio.play();
+      }
       req("right");
     }
     function upRight(e) {//rightButton keyup
@@ -128,7 +156,9 @@
         face: 2,
         animation: true
       });
-      //left_audio.play();
+      if (musicToggle == 1) {
+        //left_audio.play();
+      }
       req("left");
     }
     function upLeft(e) {//leftButton keyup
@@ -147,7 +177,9 @@
         face: 2,
         animation: true
       });
-      backward_audio.play();
+      if (musicToggle == 1) {
+        backward_audio.play();
+      }
       req("backward");
     }
     function upDown(e) {//upButton keyup
@@ -157,7 +189,7 @@
         animation: true
       });
       backward_audio.pause();
-      backward_audio.currentTime=0;
+      backward_audio.currentTime = 0;
       req("stop");
     }
     if (u.addEventListener) {
