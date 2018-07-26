@@ -1,19 +1,18 @@
 extern crate crypto;
 extern crate rocket_simpleauth as rauth;
 
-use self::rauth::status::{LoginRedirect, LoginStatus};
-use self::rauth::userpass::UserPass;
 use rocket::http::Cookies;
 use rocket::request::Form;
 use rocket::response::NamedFile;
 use rocket::response::Redirect;
-use rocket_contrib::Template;
+use self::rauth::status::{LoginRedirect, LoginStatus};
+use self::rauth::userpass::UserPass;
 use std::io;
 
 //const ITERATION_COUNT: u32 = 10000;
-const BP_USERNAME: &'static str =
+const BP_USERNAME: &str =
     "$rpbkdf2$0$AAAnEA==$pdt8xlHGxk/GJa26Bg3g1Q==$VGt+AmV7OnN/trocjyDeJLDpmxShkhDsDSIfhIrQ+ws=$";
-const BP_PASSWORD: &'static str =
+const BP_PASSWORD: &str =
     "$rpbkdf2$0$AAAnEA==$NdQsbZR5/aRAnLYGcXamZw==$gqVtt5IhhfIAe9os3QjCRNAyB1fkyQgsKeyRb/fERu0=$";
 
 //fn hash_str(string: &str) -> Result<String, SimpleAuthenticator> {
@@ -54,14 +53,8 @@ impl rauth::authenticator::Authenticator for SimpleAuthenticator {
 }
 
 #[get("/admin")]
-pub fn admin(info: UserPass<String>) -> Template {
-    #[derive(Serialize)]
-    struct Context<'a> {
-        user: &'a String,
-    }
-
-    let c = Context { user: &info.user };
-    Template::render("control", c)
+pub fn admin(_info: UserPass<String>) -> io::Result<NamedFile> {
+    NamedFile::open("pages/control.html")
 }
 
 #[get("/admin", rank = 2)]

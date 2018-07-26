@@ -11,18 +11,16 @@ extern crate serde_derive;
 #[macro_use]
 extern crate chan;
 extern crate chan_signal;
-extern crate rocket_contrib;
 
 mod auth;
 mod config;
 mod driver;
-use self::rocket::response::Redirect;
-use self::rocket_simpleauth::userpass::UserPass;
 use chan_signal::Signal;
 use config::Config;
 use driver::{Driver, Motor};
 use rocket::response::NamedFile;
-use rocket_contrib::Template;
+use self::rocket::response::Redirect;
+use self::rocket_simpleauth::userpass::UserPass;
 use std::io::Read;
 use std::path::{Path, PathBuf};
 
@@ -97,7 +95,6 @@ fn run_server(_sdone: chan::Sender<()>) {
                 handle_assets
             ],
         )
-        .attach(Template::fairing())
         .launch();
 }
 
