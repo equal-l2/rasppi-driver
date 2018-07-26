@@ -75,7 +75,7 @@ input[type="password"] {
   margin-bottom: 20px;
 }
 
-.submit input {
+.submit button {
   font-family: Arial;
   color: #ffffff;
   font-size: 16px;
@@ -90,6 +90,6 @@ input[type="password"] {
   background: linear-gradient(to bottom, #61c7e0, #418da8);
 }
 
-.submit input:hover {
+.submit button:hover {
   background: #37a4bf;
 }
