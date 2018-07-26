@@ -12,7 +12,7 @@
 <body>
   <header>
     <h1>
-      ブルーベリーパイ
+      Blueberry Pi
       <!-- Authentication succeeded: user logged in: {{ user }} -->
     </h1>
   </header>
@@ -46,7 +46,7 @@
     </div>
     <div id="down">
       <div id="down-front">
-        <p class="turnBoxButton">Back</p>
+        <p class="turnBoxButton">Backward</p>
       </div>
       <div>
         <p class="turnBoxButton">Pressed</p>
