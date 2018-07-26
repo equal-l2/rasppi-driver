@@ -54,23 +54,31 @@
     </div>
   </div>
   <script>
+    var forward_audio = new Audio("assets/oisho.mp3");
+    forward_audio.loop = true;
+    //var right_audio = new Audio("assets/.mp3");
+    //right_audio.loop = true;
+    //var left_audio = new Audio("assets/.mp3");
+    //left_audio.loop = true;
+    var backward_audio = new Audio("assets/oisho_rev.mp3");
+    backward_audio.loop = true;
     $("#up").turnBox({
       duration: 50,
-      perspective:400,
-      direction:"negative"
+      perspective: 400,
+      direction: "negative"
     });
     $("#left").turnBox({
       duration: 50,
-      axis:"Y",
+      axis: "Y",
     });
     $("#right").turnBox({
       duration: 50,
-      axis:"Y",
-      direction:"negative"
+      axis: "Y",
+      direction: "negative"
     });
     $("#down").turnBox({
       duration: 50,
-      direction:"positive"
+      direction: "positive"
     });
     var u = document.getElementById("up");
     var r = document.getElementById("right");
@@ -82,6 +90,7 @@
         face: 2,
         animation: true
       });
+      forward_audio.play();
       req("forward");
     }
     function upUp(e) {//upButton keyup
@@ -90,6 +99,8 @@
         face: 1,
         animation: true
       });
+      forward_audio.pause();
+      forward_audio.currentTime=0;
       req("stop");
     }
     function downRight(e) {//rightButton keydown
@@ -98,6 +109,7 @@
         face: 2,
         animation: true
       });
+      //right_audio.play();
       req("right");
     }
     function upRight(e) {//rightButton keyup
@@ -106,6 +118,8 @@
         face: 1,
         animation: true
       });
+      //right_audio.pause();
+      //right_audio.currentTime=0;
       req("stop");
     }
     function downLeft(e) {//leftButton keydown
@@ -114,6 +128,7 @@
         face: 2,
         animation: true
       });
+      //left_audio.play();
       req("left");
     }
     function upLeft(e) {//leftButton keyup
@@ -122,6 +137,8 @@
         face: 1,
         animation: true
       });
+      //left_audio.pause();
+      //left_audio.currentTime=0;
       req("stop");
     }
     function downDown(e) {//downButton keydown
@@ -130,6 +147,7 @@
         face: 2,
         animation: true
       });
+      backward_audio.play();
       req("backward");
     }
     function upDown(e) {//upButton keyup
@@ -138,6 +156,8 @@
         face: 1,
         animation: true
       });
+      backward_audio.pause();
+      backward_audio.currentTime=0;
       req("stop");
     }
     if (u.addEventListener) {
