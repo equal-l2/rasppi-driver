@@ -1,13 +1,12 @@
 extern crate crypto;
 extern crate rocket_simpleauth as rauth;
 
-use self::rauth::status::{LoginRedirect, LoginStatus};
-use self::rauth::userpass::UserPass;
 use rocket::http::Cookies;
 use rocket::request::Form;
 use rocket::response::NamedFile;
 use rocket::response::Redirect;
-use rocket_contrib::Template;
+use self::rauth::status::{LoginRedirect, LoginStatus};
+use self::rauth::userpass::UserPass;
 use std::io;
 
 //const ITERATION_COUNT: u32 = 10000;
@@ -54,14 +53,8 @@ impl rauth::authenticator::Authenticator for SimpleAuthenticator {
 }
 
 #[get("/admin")]
-pub fn admin(info: UserPass<String>) -> Template {
-    #[derive(Serialize)]
-    struct Context<'a> {
-        user: &'a String,
-    }
-
-    let c = Context { user: &info.user };
-    Template::render("control", c)
+pub fn admin(_info: UserPass<String>) -> io::Result<NamedFile> {
+    NamedFile::open("pages/control.html")
 }
 
 #[get("/admin", rank = 2)]

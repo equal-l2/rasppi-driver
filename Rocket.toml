@@ -1,8 +1,5 @@
-[development]
-address = "0.0.0.0"
-
 [global]
-template_dir = "pages/"
+address = "0.0.0.0"
 
 [global.tls]
 certs = "rocketcert.crt"
