@@ -10,9 +10,9 @@ use self::rauth::userpass::UserPass;
 use std::io;
 
 //const ITERATION_COUNT: u32 = 10000;
-const BP_USERNAME: &'static str =
+const BP_USERNAME: &str =
     "$rpbkdf2$0$AAAnEA==$pdt8xlHGxk/GJa26Bg3g1Q==$VGt+AmV7OnN/trocjyDeJLDpmxShkhDsDSIfhIrQ+ws=$";
-const BP_PASSWORD: &'static str =
+const BP_PASSWORD: &str =
     "$rpbkdf2$0$AAAnEA==$NdQsbZR5/aRAnLYGcXamZw==$gqVtt5IhhfIAe9os3QjCRNAyB1fkyQgsKeyRb/fERu0=$";
 
 //fn hash_str(string: &str) -> Result<String, SimpleAuthenticator> {
