@@ -1,4 +1,10 @@
 @charset "utf-8";
+* {
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
 html,body{
     height:100%;
     width:auto;
