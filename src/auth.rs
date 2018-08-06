@@ -1,12 +1,13 @@
-extern crate crypto;
+extern crate pbkdf2;
 extern crate rocket_simpleauth as rauth;
 
+use self::pbkdf2::pbkdf2_check;
+use self::rauth::status::{LoginRedirect, LoginStatus};
+use self::rauth::userpass::UserPass;
 use rocket::http::Cookies;
 use rocket::request::Form;
 use rocket::response::NamedFile;
 use rocket::response::Redirect;
-use self::rauth::status::{LoginRedirect, LoginStatus};
-use self::rauth::userpass::UserPass;
 use std::io;
 
 //const ITERATION_COUNT: u32 = 10000;
@@ -16,13 +17,9 @@ const BP_PASSWORD: &str =
     "$rpbkdf2$0$AAAnEA==$NdQsbZR5/aRAnLYGcXamZw==$gqVtt5IhhfIAe9os3QjCRNAyB1fkyQgsKeyRb/fERu0=$";
 
 //fn hash_str(string: &str) -> Result<String, SimpleAuthenticator> {
-//    crypto::pbkdf2::pbkdf2_simple(string, ITERATION_COUNT)
+//    pbkdf2::pbkdf2_simple(string, ITERATION_COUNT)
 //        .or(Err(SimpleAuthenticator { username: None }))
 //}
-
-fn hash_cmp(plain: &str, hashed: &str) -> Result<bool, SimpleAuthenticator> {
-    crypto::pbkdf2::pbkdf2_check(plain, hashed).or(Err(SimpleAuthenticator { username: None }))
-}
 
 pub struct SimpleAuthenticator {
     username: Option<String>,
@@ -40,7 +37,9 @@ impl rauth::authenticator::Authenticator for SimpleAuthenticator {
     }
 
     fn check_credentials(username: String, password: String) -> Result<Self, Self> {
-        if hash_cmp(&username, BP_USERNAME)? && hash_cmp(&password, BP_PASSWORD)? {
+        if pbkdf2_check(&username, BP_USERNAME).is_ok()
+            && pbkdf2_check(&password, BP_PASSWORD).is_ok()
+        {
             println!("[*] auth succeeded");
             Ok(SimpleAuthenticator {
                 username: Some(username),

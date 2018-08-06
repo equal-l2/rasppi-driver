@@ -13,7 +13,7 @@ serde_derive = "1.0"
 toml = "0.4.6"
 chan = "0.1.21"
 chan-signal = "0.3.1"
-rust-crypto = "0.2.36"
+pbkdf2 = "0.2.1"
 
 [dependencies.rppal]
 optional = true

@@ -15,12 +15,12 @@ extern crate chan_signal;
 mod auth;
 mod config;
 mod driver;
+use self::rocket::response::Redirect;
+use self::rocket_simpleauth::userpass::UserPass;
 use chan_signal::Signal;
 use config::Config;
 use driver::{Driver, Motor};
 use rocket::response::NamedFile;
-use self::rocket::response::Redirect;
-use self::rocket_simpleauth::userpass::UserPass;
 use std::io::Read;
 use std::path::{Path, PathBuf};
 
@@ -94,8 +94,7 @@ fn run_server(_sdone: chan::Sender<()>) {
                 handle_driver,
                 handle_assets
             ],
-        )
-        .launch();
+        ).launch();
 }
 
 fn main() {
