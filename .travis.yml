@@ -3,3 +3,5 @@ rust:
   - nightly
 script:
 - cargo check --verbose
+notifications:
+  webhooks: https://app.fossa.io/hooks/travisci

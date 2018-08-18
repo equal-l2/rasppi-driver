@@ -2,6 +2,7 @@
 authors = ["equal-l2 <eng.equall2@gmail.com>"]
 name = "rasppi-driver"
 version = "0.1.0"
+license = "MIT"
 
 [dependencies]
 lazy_static = "1.0"
