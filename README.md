@@ -1,6 +1,7 @@
 # Rasppi-driver
 
 [![Build Status](https://travis-ci.org/equal-l2/rasppi-driver.svg?branch=master)](https://travis-ci.org/equal-l2/rasppi-driver)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fequal-l2%2Frasppi-driver.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fequal-l2%2Frasppi-driver?ref=badge_shield)
 
 Motor controller via web interface.
 
@@ -21,3 +22,7 @@ openssl req -new -newkey rsa:2048 -x509 -sha256 -days 365 -nodes -out rocketcert
 ## Javascript dependency
 We use [JQuery](https://github.com/jquery/jquery) and [turnBox.js](https://github.com/nohtcoltd/turnbox_js) as merged and minified form `bundle.js`, which is made with uglify.js.  
 Generally you don't need to make it by yourself as we vendor it, but you can via `make-bundle-js.sh` if you need.  
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fequal-l2%2Frasppi-driver.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fequal-l2%2Frasppi-driver?ref=badge_large)
