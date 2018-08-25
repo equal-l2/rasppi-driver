@@ -6,9 +6,9 @@ license = "MIT"
 
 [dependencies]
 lazy_static = "1.0"
-rocket = { version = "0.3.15", features = ["tls"] }
+rocket = { version = "0.3", features = ["tls"] }
 rocket-simpleauth = "0.4.0"
-rocket_codegen = "0.3.15"
+rocket_codegen = "0.3"
 serde = "1.0"
 serde_derive = "1.0"
 toml = "0.4.6"
