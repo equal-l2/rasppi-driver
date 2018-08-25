@@ -62,15 +62,15 @@
     </div>
   </div>
   <script>
-    var musicToggle = 0;
-    var forward_audio = new Audio("assets/oisho.mp3");
-    forward_audio.loop = true;
-    //var right_audio = new Audio("assets/.mp3");
-    //right_audio.loop = true;
-    //var left_audio = new Audio("assets/.mp3");
-    //left_audio.loop = true;
-    var backward_audio = new Audio("assets/oisho_rev.mp3");
-    backward_audio.loop = true;
+    "use strict";
+    const forwardAudio = new Audio("assets/oisho.mp3");
+    forwardAudio.loop = true;
+    //const rightAudio = new Audio("assets/.mp3");
+    //rightAudio.loop = true;
+    //const leftAudio = new Audio("assets/.mp3");
+    //leftAudio.loop = true;
+    const backwardAudio = new Audio("assets/oisho_rev.mp3");
+    backwardAudio.loop = true;
     $("#up").turnBox({
       duration: 50,
       perspective: 400,
@@ -92,128 +92,75 @@
     $("#music").turnBox({
       duration: 50
     });
+
+    let inMatsuri = false;
     $("#music").on("click", function () {
-      if (musicToggle == 1) {
-        musicToggle = 0;
+      if (inMatsuri) {
+        inMatsuri = false;
         //alert("祭りは終わりだ......");
         document.getElementById('bodyStyle').href = "assets/style-off.css";
       } else {
-        musicToggle = 1;
+        inMatsuri = true;
         //alert("浜松祭りだ!!");
         document.getElementById('bodyStyle').href = "assets/style-on.css";
       }
     });
-    var u = document.getElementById("up");
-    var r = document.getElementById("right");
-    var l = document.getElementById("left");
-    var d = document.getElementById("down");
-    function downUp(e) {//upButton keydown
-      e.preventDefault();
-      $(this).turnBoxAnimate({
-        face: 2,
-        animation: true
-      });
-      if (musicToggle == 1) {
-        forward_audio.play();
+
+    class BtnCfg {
+      constructor(button, music, command) {
+        this.button = button;
+        this.music = music;
+        this.command = command;
       }
-      req("forward");
     }
-    function upUp(e) {//upButton keyup
-      e.preventDefault();
-      $(this).turnBoxAnimate({
-        face: 1,
-        animation: true
-      });
-      forward_audio.pause();
-      forward_audio.currentTime = 0;
-      req("stop");
-    }
-    function downRight(e) {//rightButton keydown
-      e.preventDefault();
-      $(this).turnBoxAnimate({
-        face: 2,
-        animation: true
-      });
-      if (musicToggle == 1) {
-        //right_audio.play();
+    const buttons = [
+      new BtnCfg(document.getElementById("up"), forwardAudio, "forward"),
+      new BtnCfg(document.getElementById("right"), null, "right"),
+      new BtnCfg(document.getElementById("left") , null, "left"),
+      new BtnCfg(document.getElementById("down") , backwardAudio, "backward")
+    ]
+
+    // generate event handler for control buttons pressed
+    function genCtrlBtnPressEventHandler(music, cmd) {
+      return function(e) {
+        e.preventDefault();
+        $(this).turnBoxAnimate({
+          face: 2,
+          animation: true
+        });
+        if (music !== null && inMatsuri) {
+          music.play();
+        }
+        req(cmd);
       }
-      req("right");
     }
-    function upRight(e) {//rightButton keyup
-      e.preventDefault();
-      $(this).turnBoxAnimate({
-        face: 1,
-        animation: true
-      });
-      //right_audio.pause();
-      //right_audio.currentTime=0;
-      req("stop");
-    }
-    function downLeft(e) {//leftButton keydown
-      e.preventDefault();
-      $(this).turnBoxAnimate({
-        face: 2,
-        animation: true
-      });
-      if (musicToggle == 1) {
-        //left_audio.play();
+
+    // generate event handler for control buttons released
+    function genCtrlBtnReleaseEventHandler(music) {
+      return function(e) {
+        e.preventDefault();
+        $(this).turnBoxAnimate({
+          face: 1,
+          animation: true
+        });
+        if (music !== null) {
+          music.pause();
+          music.currentTime = 0;
+        }
+        req("stop");
       }
-      req("left");
     }
-    function upLeft(e) {//leftButton keyup
-      e.preventDefault();
-      $(this).turnBoxAnimate({
-        face: 1,
-        animation: true
-      });
-      //left_audio.pause();
-      //left_audio.currentTime=0;
-      req("stop");
-    }
-    function downDown(e) {//downButton keydown
-      e.preventDefault();
-      $(this).turnBoxAnimate({
-        face: 2,
-        animation: true
-      });
-      if (musicToggle == 1) {
-        backward_audio.play();
+
+    for (const e of buttons) {
+      const b = e.button;
+      if (b.addEventListener) {
+        const press = genCtrlBtnPressEventHandler(e.music, e.command);
+        const release = genCtrlBtnReleaseEventHandler(e.music);
+        b.addEventListener("mousedown", press);
+        b.addEventListener("mouseup", release);
+        b.addEventListener("touchstart", press);
+        b.addEventListener("touchend", release);
       }
-      req("backward");
-    }
-    function upDown(e) {//upButton keyup
-      e.preventDefault();
-      $(this).turnBoxAnimate({
-        face: 1,
-        animation: true
-      });
-      backward_audio.pause();
-      backward_audio.currentTime = 0;
-      req("stop");
-    }
-    if (u.addEventListener) {
-      u.addEventListener("mousedown", downUp);
-      u.addEventListener("mouseup", upUp);
-      u.addEventListener("touchstart", downUp);
-      u.addEventListener("touchend", upUp);
-    }
-    if (r.addEventListener) {
-      r.addEventListener("mousedown", downRight);
-      r.addEventListener("mouseup", upRight);
-      r.addEventListener("touchstart", downRight);
-      r.addEventListener("touchend", upRight);
-    }
-    if (l.addEventListener) {
-      l.addEventListener("mousedown", downLeft);
-      l.addEventListener("mouseup", upLeft);
-      l.addEventListener("touchstart", downLeft);
-      l.addEventListener("touchend", upLeft);
-    }
-    if (d.addEventListener) {
-      d.addEventListener("mousedown", downDown);
-      d.addEventListener("mouseup", upDown);
-      d.addEventListener("touchstart", downDown);
-      d.addEventListener("touchend", upDown);
     }
   </script>
 </body>
