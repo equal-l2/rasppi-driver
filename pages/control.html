@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <link rel="stylesheet" href="assets/design.css">
   <link rel="stylesheet" href="assets/style-off.css" id="bodyStyle">
-  <script src="/assets/control.js"></script>
+  <script src="assets/control.js"></script>
   <script src="assets/bundle.js"></script>
   <title>BlueBerryPi</title>
 </head>
@@ -63,14 +63,7 @@
   </div>
   <script>
     "use strict";
-    const forwardAudio = new Audio("assets/oisho.mp3");
-    forwardAudio.loop = true;
-    //const rightAudio = new Audio("assets/.mp3");
-    //rightAudio.loop = true;
-    //const leftAudio = new Audio("assets/.mp3");
-    //leftAudio.loop = true;
-    const backwardAudio = new Audio("assets/oisho_rev.mp3");
-    backwardAudio.loop = true;
+
     $("#up").turnBox({
       duration: 50,
       perspective: 400,
@@ -117,11 +110,21 @@
         this.key = key;
       }
     }
+
+    const forwardMusic = new Howl({
+      src: ["assets/oisho.mp3"],
+      loop: true
+    });
+    const backwardMusic = new Howl({
+      src: ["assets/oisho_rev.mp3"],
+      loop: true
+    });
+
     const buttons = [
-      new BtnCfg(document.getElementById("up"), forwardAudio, "forward", "w"),
+      new BtnCfg(document.getElementById("up"), forwardMusic, "forward", "w"),
       new BtnCfg(document.getElementById("right"), null, "right", "d"),
       new BtnCfg(document.getElementById("left") , null, "left", "a"),
-      new BtnCfg(document.getElementById("down") , backwardAudio, "backward", "s")
+      new BtnCfg(document.getElementById("down") , backwardMusic, "backward", "s")
     ]
 
     // generate event handler for control buttons pressed
@@ -148,8 +151,7 @@
           animation: true
         });
         if (music !== null) {
-          music.pause();
-          music.currentTime = 0;
+          music.stop();
         }
         req("stop");
       }
