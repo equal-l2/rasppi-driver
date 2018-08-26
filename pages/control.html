@@ -107,17 +107,18 @@
     });
 
     class BtnCfg {
-      constructor(button, music, command) {
+      constructor(button, music, command, key) {
         this.button = button;
         this.music = music;
         this.command = command;
+        this.key = key;
       }
     }
     const buttons = [
-      new BtnCfg(document.getElementById("up"), forwardAudio, "forward"),
-      new BtnCfg(document.getElementById("right"), null, "right"),
-      new BtnCfg(document.getElementById("left") , null, "left"),
-      new BtnCfg(document.getElementById("down") , backwardAudio, "backward")
+      new BtnCfg(document.getElementById("up"), forwardAudio, "forward", "w"),
+      new BtnCfg(document.getElementById("right"), null, "right", "d"),
+      new BtnCfg(document.getElementById("left") , null, "left", "a"),
+      new BtnCfg(document.getElementById("down") , backwardAudio, "backward", "s")
     ]
 
     // generate event handler for control buttons pressed
@@ -150,6 +151,38 @@
         req("stop");
       }
     }
+
+    let pressedKey = null;
+    document.addEventListener(
+      "keydown",
+      (e) => {
+        if (e.repeat) {
+          return;
+        }
+        const k = e.key;
+        for (const b of buttons) {
+          if (b.key == k && pressedKey === null) {
+            e.preventDefault();
+            pressedKey = k;
+            b.button.dispatchEvent(new MouseEvent("mousedown"));
+          }
+        }
+      }
+    );
+
+    document.addEventListener(
+      "keyup",
+      (e) => {
+        const k = e.key;
+        for(const b of buttons) {
+          if (b.key == k && pressedKey == k) {
+            e.preventDefault();
+            pressedKey = null;
+            b.button.dispatchEvent(new MouseEvent("mouseup"));
+          }
+        }
+      }
+    );
 
     for (const e of buttons) {
       const b = e.button;
