@@ -94,17 +94,20 @@
     });
 
     let inMatsuri = false;
-    $("#music").on("click", function () {
-      if (inMatsuri) {
-        inMatsuri = false;
-        //alert("祭りは終わりだ......");
-        document.getElementById('bodyStyle').href = "assets/style-off.css";
-      } else {
-        inMatsuri = true;
-        //alert("浜松祭りだ!!");
-        document.getElementById('bodyStyle').href = "assets/style-on.css";
+    document.getElementById("music").addEventListener(
+      "click",
+      (e) => {
+        if (inMatsuri) {
+          inMatsuri = false;
+          //alert("祭りは終わりだ......");
+          document.getElementById('bodyStyle').href = "assets/style-off.css";
+        } else {
+          inMatsuri = true;
+          //alert("浜松祭りだ!!");
+          document.getElementById('bodyStyle').href = "assets/style-on.css";
+        }
       }
-    });
+    );
 
     class BtnCfg {
       constructor(button, music, command, key) {
@@ -123,9 +126,9 @@
 
     // generate event handler for control buttons pressed
     function genCtrlBtnPressEventHandler(music, cmd) {
-      return function(e) {
+      return (e) => {
         e.preventDefault();
-        $(this).turnBoxAnimate({
+        $(e.currentTarget).turnBoxAnimate({
           face: 2,
           animation: true
         });
@@ -138,9 +141,9 @@
 
     // generate event handler for control buttons released
     function genCtrlBtnReleaseEventHandler(music) {
-      return function(e) {
+      return (e) => {
         e.preventDefault();
-        $(this).turnBoxAnimate({
+        $(e.currentTarget).turnBoxAnimate({
           face: 1,
           animation: true
         });
@@ -185,15 +188,13 @@
     );
 
     for (const e of buttons) {
+      const press = genCtrlBtnPressEventHandler(e.music, e.command);
+      const release = genCtrlBtnReleaseEventHandler(e.music);
       const b = e.button;
-      if (b.addEventListener) {
-        const press = genCtrlBtnPressEventHandler(e.music, e.command);
-        const release = genCtrlBtnReleaseEventHandler(e.music);
-        b.addEventListener("mousedown", press);
-        b.addEventListener("mouseup", release);
-        b.addEventListener("touchstart", press);
-        b.addEventListener("touchend", release);
-      }
+      b.addEventListener("mousedown", press);
+      b.addEventListener("mouseup", release);
+      b.addEventListener("touchstart", press);
+      b.addEventListener("touchend", release);
     }
   </script>
 </body>
