@@ -4,7 +4,7 @@ use std::time::{self, Duration};
 extern crate rppal;
 #[cfg(feature = "gpio")]
 use self::rppal::gpio::{Gpio, Level, Mode};
-#[cfg(feature = "gpio")]
+use std::cell::Cell;
 use std::sync::Mutex;
 
 #[cfg(feature = "gpio")]
@@ -63,35 +63,89 @@ impl Motor {
     }
 }
 
+#[derive(Clone, Copy, Debug, Deserialize, Serialize)]
+#[serde(rename_all = "lowercase")]
+pub enum DriverState {
+    Forward,
+    Backward,
+    Right,
+    Left,
+    Stop,
+}
+
 pub struct Driver {
     pub left: Motor,
     pub right: Motor,
+    state: Mutex<Cell<DriverState>>,
 }
 
 impl Driver {
+    pub fn new(m1: Motor, m2: Motor) -> Self {
+        Driver {
+            left: m1,
+            right: m2,
+            state: Mutex::new(Cell::new(DriverState::Stop)),
+        }
+    }
+
+    pub fn change_state_to(&self, stat: DriverState) {
+        match stat {
+            DriverState::Forward => {
+                self.forward();
+            }
+            DriverState::Backward => {
+                self.backward();
+            }
+            DriverState::Right => {
+                self.right();
+            }
+            DriverState::Left => {
+                self.left();
+            }
+            DriverState::Stop => {
+                self.stop();
+            }
+        }
+    }
+
+    fn set_state(&self, st: DriverState) {
+        let cell = self.state.lock().unwrap();
+        println!("State change : {:?} -> {:?}", cell.get(), st);
+        cell.set(st);
+    }
+
+    pub fn get_state(&self) -> DriverState {
+        self.state.lock().unwrap().get()
+    }
+
     pub fn forward(&self) {
         self.left.forward();
         self.right.forward();
+        self.set_state(DriverState::Forward);
     }
 
     pub fn backward(&self) {
         self.left.backward();
         self.right.backward();
+        self.set_state(DriverState::Backward);
     }
 
     pub fn left(&self) {
         self.left.forward();
         self.right.backward();
+        self.set_state(DriverState::Left);
     }
 
     pub fn right(&self) {
         self.left.backward();
         self.right.forward();
+        self.set_state(DriverState::Right);
     }
 
     pub fn stop(&self) {
         self.left.stop();
         self.right.stop();
+        self.set_state(DriverState::Stop);
     }
 
     pub fn cleanup(&self) {

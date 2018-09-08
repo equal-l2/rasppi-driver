@@ -1,9 +1,10 @@
 // send a request for operation
 function req(op) {
-  fetch(`/driver/${op}`, {
-    method: "GET",
+  fetch(`/driver`, {
+    method: "PUT",
     cache: "no-store",
     credentials: "same-origin",
+    body: JSON.stringify({"state":op})
   }).then((resp) => {
       if(resp.ok) { // if the request is successful
         console.log(`SUCCESS: ${op}`);

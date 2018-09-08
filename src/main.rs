@@ -2,6 +2,7 @@
 #![plugin(rocket_codegen)]
 
 extern crate rocket;
+extern crate rocket_contrib;
 extern crate rocket_simpleauth;
 extern crate toml;
 #[macro_use]
@@ -11,16 +12,19 @@ extern crate serde_derive;
 #[macro_use]
 extern crate chan;
 extern crate chan_signal;
+extern crate serde_json;
 
 mod auth;
 mod config;
 mod driver;
-use self::rocket::response::Redirect;
-use self::rocket_simpleauth::userpass::UserPass;
 use chan_signal::Signal;
 use config::Config;
-use driver::{Driver, Motor};
-use rocket::response::NamedFile;
+use driver::{Driver, DriverState, Motor};
+use rocket::http::Status;
+use rocket::response::{Failure, NamedFile, Redirect};
+use rocket::Data;
+use rocket_contrib::Json;
+use rocket_simpleauth::userpass::UserPass;
 use std::io::Read;
 use std::path::{Path, PathBuf};
 
@@ -35,10 +39,10 @@ lazy_static! {
             .and_then(|mut f| f.read_to_string(&mut input))
             .expect("Could not read GPIO.toml");
         let conf: Config = toml::from_str(&input).expect("Bad structure in GPIO.toml");
-        Driver {
-            left: Motor::new(conf.left.pin1, conf.left.pin2),
-            right: Motor::new(conf.right.pin1, conf.right.pin2),
-        }
+        Driver::new(
+            Motor::new(conf.left.pin1, conf.left.pin2),
+            Motor::new(conf.right.pin1, conf.right.pin2),
+        )
     };
 }
 
@@ -52,32 +56,29 @@ fn handle_assets(file: PathBuf) -> Option<NamedFile> {
     NamedFile::open(Path::new("pages/assets/").join(file)).ok()
 }
 
-#[get("/driver/<op>")]
-fn handle_driver(_info: UserPass<String>, op: String) -> Option<()> {
-    println!("op:{}", op);
-    match op.as_str() {
-        "forward" => {
-            DRV.forward();
-            Some(())
-        }
-        "backward" => {
-            DRV.backward();
-            Some(())
-        }
-        "left" => {
-            DRV.left();
-            Some(())
-        }
-        "right" => {
-            DRV.right();
-            Some(())
-        }
-        "stop" => {
-            DRV.stop();
-            Some(())
-        }
-        _ => None,
+#[derive(Deserialize, Serialize)]
+struct StateContainer {
+    state: DriverState,
+}
+
+#[put("/driver", data = "<state>")]
+fn driver_put(_info: UserPass<String>, state: Data) -> Result<(), Failure> {
+    let mut buf = String::new();
+    let _ = state.open().read_to_string(&mut buf);
+    if let Ok(inner) = serde_json::from_str::<StateContainer>(buf.as_str()) {
+        let state = inner.state;
+        DRV.change_state_to(state);
+        Ok(())
+    } else {
+        Err(Failure(Status::BadRequest))
     }
+}
+
+#[get("/driver")]
+fn driver_get(_info: UserPass<String>) -> Json<StateContainer> {
+    Json(StateContainer {
+        state: DRV.get_state(),
+    })
 }
 
 fn run_server(_sdone: chan::Sender<()>) {
@@ -91,8 +92,9 @@ fn run_server(_sdone: chan::Sender<()>) {
                 auth::logout,
                 auth::unauth,
                 handle_root,
-                handle_driver,
-                handle_assets
+                handle_assets,
+                driver_put,
+                driver_get,
             ],
         ).launch();
 }
