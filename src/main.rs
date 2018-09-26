@@ -20,11 +20,12 @@ mod driver;
 use chan_signal::Signal;
 use config::Config;
 use driver::{Driver, DriverState, Motor};
-use rocket::http::Status;
-use rocket::response::{Failure, NamedFile, Redirect};
+use rocket::http::{ContentType, Status};
+use rocket::response::{Content, Failure, NamedFile, Redirect};
 use rocket::Data;
 use rocket_contrib::Json;
 use rocket_simpleauth::userpass::UserPass;
+use std::fs::{self, File};
 use std::io::Read;
 use std::path::{Path, PathBuf};
 
@@ -54,6 +55,18 @@ fn handle_root() -> Redirect {
 #[get("/assets/<file..>")]
 fn handle_assets(file: PathBuf) -> Option<NamedFile> {
     NamedFile::open(Path::new("pages/assets/").join(file)).ok()
+}
+
+#[get("/hls/<file..>")]
+fn handle_hls(_info: UserPass<String>, file: PathBuf) -> Option<Content<fs::File>> {
+    let f = File::open(Path::new("pages/hls/").join(file.clone())).ok()?;
+    let ct = match file.extension()?.to_str()? {
+        "m3u8" => ContentType::new("application", "vnd.apple.mpegURL"),
+        "m4s" => ContentType::new("video", "mp4"),
+        "ts" => ContentType::new("video", "mp2t"),
+        _ => return None,
+    };
+    Some(Content(ct, f))
 }
 
 #[derive(Deserialize, Serialize)]
@@ -93,6 +106,7 @@ fn run_server(_sdone: chan::Sender<()>) {
                 auth::unauth,
                 handle_root,
                 handle_assets,
+                handle_hls,
                 driver_put,
                 driver_get,
             ],
