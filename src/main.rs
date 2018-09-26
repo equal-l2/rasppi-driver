@@ -62,8 +62,8 @@ fn handle_hls(_info: UserPass<String>, file: PathBuf) -> Option<Content<fs::File
     let f = File::open(Path::new("pages/hls/").join(file.clone())).ok()?;
     let ct = match file.extension()?.to_str()? {
         "m3u8" => ContentType::new("application", "vnd.apple.mpegURL"),
-        "m4s" => ContentType::new("video", "mp4"),
-        "ts" => ContentType::new("video", "mp2t"),
+        "m4s" | "mp4" => ContentType::new("video", "mp4"),
+        "ts" => ContentType::new("video", "MP2T"),
         _ => return None,
     };
     Some(Content(ct, f))
