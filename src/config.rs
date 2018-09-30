@@ -1,7 +1,23 @@
+#[cfg(feature = "hls")]
+use hls;
+use std::io::Read;
+
+lazy_static! {
+    pub static ref CONF: Config = {
+        let mut input = String::new();
+        std::fs::File::open("Config.toml")
+            .and_then(|mut f| f.read_to_string(&mut input))
+            .expect("Could not read Config.toml");
+        toml::from_str(&input).expect("Bad structure in Config.toml")
+    };
+}
+
 #[derive(Deserialize)]
 pub struct Config {
     pub left: Pins,
     pub right: Pins,
+    #[cfg(feature = "hls")]
+    pub hls: hls::HLSConfig,
 }
 
 #[derive(Deserialize)]

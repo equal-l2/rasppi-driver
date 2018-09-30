@@ -1,0 +1,9 @@
+[left]
+pin1 = 19
+pin2 = 26
+[right]
+pin1 = 20
+pin2 = 21
+[hls]
+cmd = "ffmpeg -loglevel quiet -f lavfi -re -i testsrc=s=640x480:r=30 -c:v h264_videotoolbox -hls_segment_type fmp4 -hls_flags delete_segments+split_by_time -hls_time 2 playlist.m3u8"
+path = "pages/hls"

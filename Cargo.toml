@@ -27,5 +27,6 @@ features = ["json"]
 version = "0.3"
 
 [features]
-default = ["gpio"]
+default = ["gpio", "hls"]
 gpio = ["rppal"]
+hls = []
