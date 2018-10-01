@@ -14,7 +14,7 @@ pub struct HLSConfig {
 
 pub fn run_hls() {
     let wd = Path::new(&config::CONF.hls.path);
-    if (!wd.is_dir()) {
+    if !wd.is_dir() {
         panic!("{}: not found or not a directory", config::CONF.hls.path);
     }
     let cmd: Vec<_> = config::CONF.hls.cmd.split(' ').collect();
@@ -23,7 +23,7 @@ pub fn run_hls() {
         .current_dir(wd)
         .spawn()
         .unwrap();
-    child.wait();
+    child.wait().unwrap();
 }
 
 #[get("/hls/<file..>")]
