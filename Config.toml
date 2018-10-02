@@ -1,3 +1,4 @@
+ir = 10
 [left]
 pin1 = 19
 pin2 = 26

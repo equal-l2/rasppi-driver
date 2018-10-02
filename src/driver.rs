@@ -5,6 +5,7 @@ extern crate rppal;
 #[cfg(feature = "gpio")]
 use self::rppal::gpio::{Gpio, Level, Mode};
 use std::cell::Cell;
+use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Mutex;
 
 #[cfg(feature = "gpio")]
@@ -24,7 +25,7 @@ impl Motor {
             (*gpio).set_mode(p1, Mode::Output);
             (*gpio).set_mode(p2, Mode::Output);
         }
-        println!("GPIO init: {} {}", p1, p2);
+        println!("Motor GPIO init: {} {}", p1, p2);
         Motor(p1, p2)
     }
 
@@ -37,7 +38,7 @@ impl Motor {
             (*gpio).write(self.0, Level::High);
             (*gpio).write(self.1, Level::Low);
         }
-        println!("GPIO {} {} : 1 0", self.0, self.1);
+        println!("Motor GPIO {} {} : 1 0", self.0, self.1);
     }
 
     fn backward(&self) {
@@ -49,7 +50,7 @@ impl Motor {
             (*gpio).write(self.0, Level::Low);
             (*gpio).write(self.1, Level::High);
         }
-        println!("GPIO {} {} : 0 1", self.0, self.1);
+        println!("Motor GPIO {} {} : 0 1", self.0, self.1);
     }
 
     fn stop(&self) {
@@ -59,7 +60,7 @@ impl Motor {
             (*gpio).write(self.0, Level::Low);
             (*gpio).write(self.1, Level::Low);
         }
-        println!("GPIO {} {} : 0 0", self.0, self.1);
+        println!("Motor GPIO {} {} : 0 0", self.0, self.1);
     }
 }
 
@@ -155,5 +156,61 @@ impl Driver {
             (*gpio).cleanup();
         }
         println!("GPIO Clean Up");
+    }
+}
+
+pub struct IRType {
+    pin: u8,
+    state: AtomicBool,
+}
+
+impl IRType {
+    pub fn new(p: u8) -> Self {
+        #[cfg(feature = "gpio")]
+        {
+            let mut gpio = GPIO.lock().unwrap();
+            (*gpio).set_mode(p, Mode::Output);
+        }
+        println!("IR GPIO init: {}", p);
+        IRType {
+            pin: p,
+            state: AtomicBool::new(false),
+        }
+    }
+
+    pub fn change_state_to(&self, s: bool) {
+        if s {
+            self.on();
+        } else {
+            self.off();
+        }
+    }
+
+    fn set_state(&self, s: bool) {
+        self.state.store(s, Ordering::SeqCst);
+    }
+
+    pub fn get_state(&self) -> bool {
+        self.state.load(Ordering::SeqCst)
+    }
+
+    fn on(&self) {
+        #[cfg(feature = "gpio")]
+        {
+            let gpio = GPIO.lock().unwrap();
+            (*gpio).write(self.pin, Level::High);
+        }
+        self.set_state(true);
+        println!("Motor GPIO {} : 1", self.pin);
+    }
+
+    fn off(&self) {
+        #[cfg(feature = "gpio")]
+        {
+            let gpio = GPIO.lock().unwrap();
+            (*gpio).write(self.pin, Level::Low);
+        }
+        self.set_state(false);
+        println!("Motor GPIO {} : 0", self.pin);
     }
 }

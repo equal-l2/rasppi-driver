@@ -8,7 +8,7 @@ use std::process::Command;
 
 #[derive(Deserialize)]
 pub struct HLSConfig {
-    cmd: String, // commands to generate HLS stream
+    cmd: String,  // commands to generate HLS stream
     path: String, // working directory for cmd and directory for placing HLS files
 }
 

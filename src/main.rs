@@ -20,7 +20,7 @@ mod driver;
 #[cfg(feature = "hls")]
 mod hls;
 use chan_signal::Signal;
-use driver::{Driver, DriverState, Motor};
+use driver::{Driver, DriverState, IRType, Motor};
 use rocket::http::Status;
 use rocket::response::{Failure, NamedFile, Redirect};
 use rocket::Data;
@@ -32,14 +32,14 @@ use std::path::{Path, PathBuf};
 lazy_static! {
     static ref DRV: Driver = {
         let conf = &config::CONF;
-        #[cfg(not(feature = "gpio"))]
-        {
-            println!("!!! WARNING : GPIO is disabled !!!");
-        }
         Driver::new(
             Motor::new(conf.left.pin1, conf.left.pin2),
             Motor::new(conf.right.pin1, conf.right.pin2),
         )
+    };
+    static ref IR: IRType = {
+        let conf = &config::CONF;
+        IRType::new(conf.ir)
     };
 }
 
@@ -54,7 +54,7 @@ fn handle_assets(file: PathBuf) -> Option<NamedFile> {
 }
 
 #[derive(Deserialize, Serialize)]
-struct StateContainer {
+struct DriverStateContainer {
     state: DriverState,
 }
 
@@ -62,9 +62,8 @@ struct StateContainer {
 fn driver_put(_info: UserPass<String>, state: Data) -> Result<(), Failure> {
     let mut buf = String::new();
     let _ = state.open().read_to_string(&mut buf);
-    if let Ok(inner) = serde_json::from_str::<StateContainer>(buf.as_str()) {
-        let state = inner.state;
-        DRV.change_state_to(state);
+    if let Ok(inner) = serde_json::from_str::<DriverStateContainer>(buf.as_str()) {
+        DRV.change_state_to(inner.state);
         Ok(())
     } else {
         Err(Failure(Status::BadRequest))
@@ -72,9 +71,33 @@ fn driver_put(_info: UserPass<String>, state: Data) -> Result<(), Failure> {
 }
 
 #[get("/driver")]
-fn driver_get(_info: UserPass<String>) -> Json<StateContainer> {
-    Json(StateContainer {
+fn driver_get(_info: UserPass<String>) -> Json<DriverStateContainer> {
+    Json(DriverStateContainer {
         state: DRV.get_state(),
+    })
+}
+
+#[derive(Deserialize, Serialize)]
+struct IRStateContainer {
+    state: bool,
+}
+
+#[put("/ir", data = "<state>")]
+fn ir_put(_info: UserPass<String>, state: Data) -> Result<(), Failure> {
+    let mut buf = String::new();
+    let _ = state.open().read_to_string(&mut buf);
+    if let Ok(inner) = serde_json::from_str::<IRStateContainer>(buf.as_str()) {
+        IR.change_state_to(inner.state);
+        Ok(())
+    } else {
+        Err(Failure(Status::BadRequest))
+    }
+}
+
+#[get("/ir")]
+fn ir_get(_info: UserPass<String>) -> Json<IRStateContainer> {
+    Json(IRStateContainer {
+        state: IR.get_state(),
     })
 }
 
@@ -89,6 +112,8 @@ fn run_server(_sdone: chan::Sender<()>) {
         handle_assets,
         driver_put,
         driver_get,
+        ir_put,
+        ir_get,
     ];
 
     #[cfg(feature = "hls")]
