@@ -13,6 +13,15 @@ lazy_static! {
     static ref GPIO: Mutex<Gpio> = { Mutex::new(Gpio::new().unwrap()) };
 }
 
+pub fn gpio_cleanup() {
+    #[cfg(feature = "gpio")]
+    {
+        let mut gpio = GPIO.lock().unwrap();
+        (*gpio).cleanup();
+    }
+    println!("[driver] GPIO Clean Up");
+}
+
 const WAIT: Duration = time::Duration::from_micros(100);
 
 pub struct Motor(u8, u8);
@@ -25,7 +34,7 @@ impl Motor {
             (*gpio).set_mode(p1, Mode::Output);
             (*gpio).set_mode(p2, Mode::Output);
         }
-        println!("Motor GPIO init: {} {}", p1, p2);
+        println!("[driver] Motor GPIO init: {} {}", p1, p2);
         Motor(p1, p2)
     }
 
@@ -38,7 +47,7 @@ impl Motor {
             (*gpio).write(self.0, Level::High);
             (*gpio).write(self.1, Level::Low);
         }
-        println!("Motor GPIO {} {} : 1 0", self.0, self.1);
+        println!("[driver] Motor GPIO {} {} : 1 0", self.0, self.1);
     }
 
     fn backward(&self) {
@@ -50,7 +59,7 @@ impl Motor {
             (*gpio).write(self.0, Level::Low);
             (*gpio).write(self.1, Level::High);
         }
-        println!("Motor GPIO {} {} : 0 1", self.0, self.1);
+        println!("[driver] Motor GPIO {} {} : 0 1", self.0, self.1);
     }
 
     fn stop(&self) {
@@ -60,7 +69,7 @@ impl Motor {
             (*gpio).write(self.0, Level::Low);
             (*gpio).write(self.1, Level::Low);
         }
-        println!("Motor GPIO {} {} : 0 0", self.0, self.1);
+        println!("[driver] Motor GPIO {} {} : 0 0", self.0, self.1);
     }
 }
 
@@ -111,7 +120,7 @@ impl Driver {
 
     fn set_state(&self, st: DriverState) {
         let cell = self.state.lock().unwrap();
-        println!("State change : {:?} -> {:?}", cell.get(), st);
+        println!("[driver] Driver State change : {:?} -> {:?}", cell.get(), st);
         cell.set(st);
     }
 
@@ -148,15 +157,6 @@ impl Driver {
         self.right.stop();
         self.set_state(DriverState::Stop);
     }
-
-    pub fn cleanup(&self) {
-        #[cfg(feature = "gpio")]
-        {
-            let mut gpio = GPIO.lock().unwrap();
-            (*gpio).cleanup();
-        }
-        println!("GPIO Clean Up");
-    }
 }
 
 pub struct IRType {
@@ -171,7 +171,7 @@ impl IRType {
             let mut gpio = GPIO.lock().unwrap();
             (*gpio).set_mode(p, Mode::Output);
         }
-        println!("IR GPIO init: {}", p);
+        println!("[driver] IR GPIO init: {}", p);
         IRType {
             pin: p,
             state: AtomicBool::new(false),
@@ -201,7 +201,7 @@ impl IRType {
             (*gpio).write(self.pin, Level::High);
         }
         self.set_state(true);
-        println!("Motor GPIO {} : 1", self.pin);
+        println!("[driver] IR GPIO {} : 1", self.pin);
     }
 
     fn off(&self) {
@@ -211,6 +211,6 @@ impl IRType {
             (*gpio).write(self.pin, Level::Low);
         }
         self.set_state(false);
-        println!("Motor GPIO {} : 0", self.pin);
+        println!("[driver] IR GPIO {} : 0", self.pin);
     }
 }

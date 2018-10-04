@@ -138,7 +138,7 @@ fn main() {
 
     chan_select! {
         signal.recv() -> _ => {
-            DRV.cleanup();
+            driver::gpio_cleanup();
         },
         rdone.recv() => {}
     }

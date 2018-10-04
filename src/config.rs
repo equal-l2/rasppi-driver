@@ -6,13 +6,13 @@ lazy_static! {
     pub static ref CONF: Config = {
         #[cfg(not(feature = "gpio"))]
         {
-            println!("!!! WARNING : GPIO is disabled !!!");
+            println!("[config] GPIO disabled");
         }
         let mut input = String::new();
         std::fs::File::open("Config.toml")
             .and_then(|mut f| f.read_to_string(&mut input))
-            .expect("Could not read Config.toml");
-        toml::from_str(&input).expect("Bad structure in Config.toml")
+            .expect("[config] Could not read Config.toml");
+        toml::from_str(&input).expect("[config] Bad structure in Config.toml")
     };
 }
 

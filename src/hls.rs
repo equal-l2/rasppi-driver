@@ -4,7 +4,7 @@ use rocket::response::Content;
 use rocket_simpleauth::userpass::UserPass;
 use std::fs::{self, File};
 use std::path::{Path, PathBuf};
-use std::process::Command;
+use std::process::{self, Command};
 
 #[derive(Deserialize)]
 pub struct HLSConfig {
@@ -13,17 +13,30 @@ pub struct HLSConfig {
 }
 
 pub fn run_hls() {
-    let wd = Path::new(&config::CONF.hls.path);
+    let path = &config::CONF.hls.path;
+    println!("[hls] FFmpeg destination path: {}", path);
+    println!("[hls] FFmpeg command: {:?}", config::CONF.hls.cmd);
+    let wd = Path::new(path);
     if !wd.is_dir() {
-        panic!("{}: not found or not a directory", config::CONF.hls.path);
+        panic!("[hls] {}: not found or not a directory", path);
     }
     let cmd: Vec<_> = config::CONF.hls.cmd.split(' ').collect();
-    let mut child = Command::new(cmd[0])
+    let status = Command::new(cmd[0])
         .args(&cmd[1..])
         .current_dir(wd)
-        .spawn()
-        .unwrap();
-    child.wait().unwrap();
+        .status();
+
+    if status.is_err() {
+        println!("[hls] Fatal : FFmpeg could not run");
+        println!("[hls] Review cmd in Config.toml");
+        process::exit(1)
+    }
+
+    if !status.unwrap().success() {
+        println!("[hls] Fatal : FFmpeg exited unsuccessfully");
+        println!("[hls] Review cmd in Config.toml");
+        process::exit(1)
+    }
 }
 
 #[get("/hls/<file..>")]

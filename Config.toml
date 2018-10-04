@@ -6,5 +6,6 @@ pin2 = 26
 pin1 = 20
 pin2 = 21
 [hls]
+#cmd = "ffmpeg -f lavfi -re -i testsrc=s=640x480:r=30 -c:v h264_videotoolbox -hls_segment_type fmp4 -hls_flags delete_segments+split_by_time -hls_time 2 playlist.m3u8"
 cmd = "/home/pi/test/ffmpeg-4.0.2-armhf-32bit-static/ffmpeg -loglevel quiet -re -f v4l2 -input_format h264 -i /dev/video0 -c:v copy -hls_list_size 5 -hls_flags delete_segments+split_by_time -hls_time 2 -hls_segment_type fmp4 playlist.m3u8"
 path = "pages/hls"

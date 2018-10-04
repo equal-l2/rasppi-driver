@@ -40,12 +40,12 @@ impl rauth::authenticator::Authenticator for SimpleAuthenticator {
         if pbkdf2_check(&username, BP_USERNAME).is_ok()
             && pbkdf2_check(&password, BP_PASSWORD).is_ok()
         {
-            println!("[*] auth succeeded");
+            println!("[auth] auth succeeded");
             Ok(SimpleAuthenticator {
                 username: Some(username),
             })
         } else {
-            println!("[*] auth failed");
+            println!("[auth] auth failed");
             Err(SimpleAuthenticator { username: None })
         }
     }
