@@ -13,29 +13,31 @@
 <body>
   <header>
     <h1>
-      Blueberry Pi
+      <span style="color:#87ceeb">Blue</span>
+      <span style="color:#ff1493">berry</span>
+      <span style="color:#f0e68c">Pi</span>
     </h1>
   </header>
   <div id="camera">
     <video id="live" playsinline autoplay></video>
   </div>
-  <div id="ir">
-    <div id="ir-front">
-      <p class="turnBoxButton">暗視モードOFF</p>
-    </div>
-    <div>
-      <p class="turnBoxButton turnBoxButtonPrev">暗視モードON</p>
-    </div>
-  </div>
-  <div id="music">
-    <div id="music-front">
-      <p class="turnBoxButton">祭りモードOFF</p>
-    </div>
-    <div>
-      <p class="turnBoxButton turnBoxButtonPrev">祭りモードON</p>
-    </div>
-  </div>
   <div id="container">
+    <div id="ir">
+      <div id="ir-front">
+        <p class="turnBoxButton">暗視モードOFF</p>
+      </div>
+      <div>
+        <p class="turnBoxButton turnBoxButtonPrev">暗視モードON</p>
+      </div>
+    </div>
+    <div id="music">
+      <div id="music-front">
+        <p class="turnBoxButton">祭りモードOFF</p>
+      </div>
+      <div>
+        <p class="turnBoxButton turnBoxButtonPrev">祭りモードON</p>
+      </div>
+    </div>
     <div id="up">
       <div id="up-front">
         <p class="turnBoxButton">Forward</p>
@@ -74,17 +76,17 @@
     try {
       let video = document.getElementById('live');
       let src = 'hls/playlist.m3u8'
-      if(Hls.isSupported()) {
+      if (Hls.isSupported()) {
         var hls = new Hls();
         hls.loadSource(src);
         hls.attachMedia(video);
-        hls.on(Hls.Events.MANIFEST_PARSED,function() {
+        hls.on(Hls.Events.MANIFEST_PARSED, function () {
           video.play();
         });
       }
       else if (video.canPlayType('application/vnd.apple.mpegurl')) {
         video.src = src;
-        video.addEventListener('loadedmetadata',function() {
+        video.addEventListener('loadedmetadata', function () {
           video.play();
         });
       }
@@ -162,8 +164,8 @@
     const buttons = [
       new BtnCfg(document.getElementById("up"), forwardMusic, "forward", "w"),
       new BtnCfg(document.getElementById("right"), null, "right", "d"),
-      new BtnCfg(document.getElementById("left") , null, "left", "a"),
-      new BtnCfg(document.getElementById("down") , backwardMusic, "backward", "s")
+      new BtnCfg(document.getElementById("left"), null, "left", "a"),
+      new BtnCfg(document.getElementById("down"), backwardMusic, "backward", "s")
     ]
 
     // generate event handler for control buttons pressed
@@ -177,7 +179,7 @@
         if (music !== null && inMatsuri) {
           music.play();
         }
-        req("driver",cmd);
+        req("driver", cmd);
       }
     }
 
@@ -192,7 +194,7 @@
         if (music !== null) {
           music.stop();
         }
-        req("driver","stop");
+        req("driver", "stop");
       }
     }
 
@@ -218,7 +220,7 @@
       "keyup",
       (e) => {
         const k = e.key;
-        for(const b of buttons) {
+        for (const b of buttons) {
           if (b.key == k && pressedKey == k) {
             e.preventDefault();
             pressedKey = null;

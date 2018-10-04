@@ -3,3 +3,8 @@ body{
     background-image:url("maturi.png");
     background-size: auto;
 }
+h1{
+    font-size:0em;
+    border-top: solid 0px #f5f5f5;/*上線*/
+    border-bottom: solid 0px #f5f5f5;/*下線*/
+}
