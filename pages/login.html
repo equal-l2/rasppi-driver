@@ -17,14 +17,14 @@
         -->
   <div id="form">
     <p class="form-title">Login</p>
-    <form action="/admin" method="POST">
+    <form action="/admin" method="POST" id="authform">
       <p>name</p>
       <p class="mail">
-        <input type="text" name="username" />
+        <input type="text" name="username" id="username"/>
       </p>
       <p>Password</p>
       <p class="pass">
-        <input type="password" name="password" />
+        <input type="password" name="password" id="password"/>
       </p>
       <p class="submit">
         <button type="submit" value="login">Login</button>
@@ -32,5 +32,14 @@
     </form>
   </div>
 </body>
+
+<script type="text/javascript">
+  window.cardReaderCallback = function(username, password) {
+    document.getElementById('authform').hidden = true;
+    document.getElementById('username').value = username;
+    document.getElementById('password').value = password;
+    document.getElementById('authform').submit();
+  };
+</script>
 
 </html>
