@@ -28,6 +28,7 @@ use rocket_contrib::Json;
 use rocket_simpleauth::userpass::UserPass;
 use std::io::Read;
 use std::path::{Path, PathBuf};
+use std::process;
 
 lazy_static! {
     static ref DRV: Driver = {
@@ -131,7 +132,7 @@ fn main() {
 
     #[cfg(feature = "hls")]
     {
-        std::thread::spawn(|| hls::run_hls());
+        std::thread::spawn(|| hls::run_hls().unwrap_or_else(|| process::exit(1)));
     }
 
     std::thread::spawn(move || run_server(sdone));

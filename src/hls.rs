@@ -12,7 +12,7 @@ pub struct HLSConfig {
     path: String, // working directory for cmd and directory for placing HLS files
 }
 
-pub fn run_hls() {
+pub fn run_hls() -> Option<()> {
     let path = &config::CONF.hls.path;
     println!("[hls] FFmpeg destination path: {}", path);
     println!("[hls] FFmpeg command: {:?}", config::CONF.hls.cmd);
@@ -21,22 +21,27 @@ pub fn run_hls() {
         panic!("[hls] {}: not found or not a directory", path);
     }
     let cmd: Vec<_> = config::CONF.hls.cmd.split(' ').collect();
+    let f = File::create("ffmpeg.log").ok()?;
     let status = Command::new(cmd[0])
         .args(&cmd[1..])
+        .stdout(f.try_clone().unwrap())
+        .stderr(f)
         .current_dir(wd)
         .status();
 
     if status.is_err() {
         println!("[hls] Fatal : FFmpeg could not run");
         println!("[hls] Review cmd in Config.toml");
-        process::exit(1)
+        return None;
     }
 
     if !status.unwrap().success() {
         println!("[hls] Fatal : FFmpeg exited unsuccessfully");
         println!("[hls] Review cmd in Config.toml");
-        process::exit(1)
+        return None;
     }
+
+    Some(())
 }
 
 #[get("/hls/<file..>")]

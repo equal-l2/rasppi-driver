@@ -120,7 +120,11 @@ impl Driver {
 
     fn set_state(&self, st: DriverState) {
         let cell = self.state.lock().unwrap();
-        println!("[driver] Driver State change : {:?} -> {:?}", cell.get(), st);
+        println!(
+            "[driver] Driver State change : {:?} -> {:?}",
+            cell.get(),
+            st
+        );
         cell.set(st);
     }
 
