@@ -61,6 +61,9 @@ span#h1-pi{
 .turnBoxFaceNum2 {
     background: gray;
 }
+span#ir-str-l,span#ir-str-r{
+    display:none;
+}
 div#container{
     margin-left:2%;
     margin-right:2%;

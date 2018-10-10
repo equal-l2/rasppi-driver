@@ -5,12 +5,9 @@ body {
 }
 
 .blink {
-    animation-name: blink;
-    /* アニメーションの名前を設定 */
-    animation-duration: 1.2s;
-    /* アニメーションの秒数を設定 */
-    animation-iteration-count: infinite;
-    /* 繰り返しを設定（１回だけなら不要） */
+    -webkit-animation: 0.5s linear 0s alternate none infinite running blink;
+    -moz-animation: 0.5s linear 0s alternate none infinite running blink;
+    animation: 0.5s linear 0s alternate none infinite running blink;
 }
 
 span#h1-blue {
@@ -23,6 +20,9 @@ span#h1-berry {
 
 span#h1-pi {
     color: yellow;
+}
+span#ir-str-l,span#ir-str-r{
+    display:inline;
 }
 #music.turnBoxCurrentFace1 > .turnBoxFaceNum1 {
     background: silver;
@@ -41,16 +41,23 @@ span#h1-pi {
     background: purple;
 }
 
+@-webkit-keyframes blink {
+    0% { opacity: 0; }
+    49.9% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { opacity: 1; }
+}
+@-moz-keyframes blink {
+    0% { opacity: 0; }
+    49.9% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { opacity: 1; }
+}
 @keyframes blink {
-    /*上記で設定したアニメーションの動作を指定 */
-    0% {
-        opacity: 1;
-    }
-    /* 1.2s中の動作開始時間を%で指示 */
-    50% {
-        opacity: 0;
-    }
-    /* 同上 */
+    0% { opacity: 0; }
+    49.9% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { opacity: 1; }
 }
 
 .marquee {
@@ -95,45 +102,45 @@ span#h1-pi {
 
 @-webkit-keyframes marquee {
     from {
-        -webkit-transform: translate(50%);
+        -webkit-transform: translate(100%);
     }
     99%, to {
-        -webkit-transform: translate(-50%);
+        -webkit-transform: translate(-100%);
     }
 }
 
 @-moz-keyframes marquee {
     from {
-        -moz-transform: translate(50%);
+        -moz-transform: translate(100%);
     }
     99%, to {
-        -moz-transform: translate(-50%);
+        -moz-transform: translate(-100%);
     }
 }
 
 @-ms-keyframes marquee {
     from {
-        -ms-transform: translate(50%);
+        -ms-transform: translate(100%);
     }
     99%, to {
-        -ms-transform: translate(-50%);
+        -ms-transform: translate(-100%);
     }
 }
 
 @-o-keyframes marquee {
     from {
-        -o-transform: translate(50%);
+        -o-transform: translate(100%);
     }
     99%, to {
-        -o-transform: translate(-50%);
+        -o-transform: translate(-100%);
     }
 }
 
 @keyframes marquee {
     from {
-        transform: translate(50%);
+        transform: translate(100%);
     }
     99%, to {
-        transform: translate(-50%);
+        transform: translate(-100%);
     }
 }
