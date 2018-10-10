@@ -4,7 +4,9 @@
 <head>
   <meta charset="utf-8">
   <link rel="stylesheet" href="assets/design.css">
-  <link rel="stylesheet" href="assets/style-off.css" id="bodyStyle">
+  <link rel="stylesheet" href="assets/style-off.css" id="musicBodyStyle">
+  <link rel="stylesheet" href="assets/style-off2.css" id="irBodyStyle">
+
   <script src="assets/control.js"></script>
   <script src="assets/bundle.js"></script>
   <title>BlueBerryPi</title>
@@ -13,10 +15,16 @@
 <body>
   <header>
     <h1>
-      <span style="color:#87ceeb">Blue</span>
-      <span style="color:#ff1493">berry</span>
-      <span style="color:#f0e68c">Pi</span>
-    </h1>
+      <div class="marquee">
+        <p>
+          <span class="blink">
+            <span id="h1-blue">Blue</span>
+            <span id="h1-berry">berry</span>
+            <span id="h1-pi">Pi</span>
+          </span>
+        </p>
+      </div>
+      </h1>
   </header>
   <div id="camera">
     <video id="live" playsinline autoplay></video>
@@ -118,7 +126,6 @@
     $("#ir").turnBox({
       duration: 50
     });
-
     let IRenabled = false;
     document.getElementById("ir").addEventListener("click",
       (e) => {
@@ -134,14 +141,37 @@
         if (inMatsuri) {
           inMatsuri = false;
           //alert("祭りは終わりだ......");
-          document.getElementById('bodyStyle').href = "assets/style-off.css";
+          document.getElementById('musicBodyStyle').href = "assets/style-off.css";
         } else {
           inMatsuri = true;
           //alert("浜松祭りだ!!");
-          document.getElementById('bodyStyle').href = "assets/style-on.css";
+          document.getElementById('musicBodyStyle').href = "assets/style-on.css";
         }
       }
     );
+    let inInfrared = false;
+    document.getElementById("ir").addEventListener(
+      "click",
+      (e) => {
+        if (inInfrared) {
+          inInfrared = false;
+          //alert("ir-on");
+          document.getElementById('irBodyStyle').href = "assets/ir-off.css";
+        } else {
+          inInfrared = true;
+          //alert("ir-off");
+          document.getElementById('irBodyStyle').href = "assets/ir-on.css";
+        }
+      }
+    );
+    window.onload = function () {
+      document.oncontextmenu = function () {
+        if(inInfrared){
+          alert("右クリックは禁止です！");
+        }
+        return false;  //標準の右クリックメニューを表示しない
+      }
+    }
 
     class BtnCfg {
       constructor(button, music, command, key) {

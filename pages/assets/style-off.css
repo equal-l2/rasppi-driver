@@ -2,4 +2,6 @@
 body{
     background: linear-gradient(#808080,black);
     background-size: auto;
+    background-image: url("back.jpg");
+    background-size: cover;
 }
