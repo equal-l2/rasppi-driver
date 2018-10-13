@@ -4,7 +4,7 @@ use rocket::response::Content;
 use rocket_simpleauth::userpass::UserPass;
 use std::fs::{self, File};
 use std::path::{Path, PathBuf};
-use std::process::{self, Command};
+use std::process::Command;
 
 #[derive(Deserialize)]
 pub struct HLSConfig {

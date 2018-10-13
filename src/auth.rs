@@ -39,7 +39,9 @@ impl rauth::authenticator::Authenticator for SimpleAuthenticator {
     }
 
     fn check_credentials(username: String, password: String) -> Result<Self, Self> {
-        if pbkdf2_check(&username, STUDENT_CARD_SYS_CODE).is_ok() || (pbkdf2_check(&username, BP_USERNAME).is_ok() && pbkdf2_check(&password, BP_PASSWORD).is_ok())
+        if pbkdf2_check(&username, STUDENT_CARD_SYS_CODE).is_ok()
+            || (pbkdf2_check(&username, BP_USERNAME).is_ok()
+                && pbkdf2_check(&password, BP_PASSWORD).is_ok())
         {
             println!("[auth] auth succeeded");
             Ok(SimpleAuthenticator {

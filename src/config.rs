@@ -8,10 +8,8 @@ lazy_static! {
         {
             println!("[config] GPIO disabled");
         }
-        let mut input = String::new();
-        std::fs::File::open("Config.toml")
-            .and_then(|mut f| f.read_to_string(&mut input))
-            .expect("[config] Could not read Config.toml");
+        let input =
+            std::fs::read_to_string("Config.toml").expect("[config] Could not read Config.toml");
         toml::from_str(&input).expect("[config] Bad structure in Config.toml")
     };
 }
